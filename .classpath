@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="WEB-INF/src"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-5.1.25-bin.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-codec-1.5.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/poi-3.9-20121203.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/poi-excelant-3.9-20121203.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/poi-ooxml-3.9-20121203.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/poi-ooxml-schemas-3.9-20121203.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/poi-scratchpad-3.9-20121203.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jstl.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/standard.jar"/>
+	<classpathentry kind="var" path="TOMCAT_HOME/lib/servlet-api.jar"/>
+	<classpathentry kind="var" path="TOMCAT_HOME/lib/jasper.jar"/>
+	<classpathentry kind="var" path="TOMCAT_HOME/lib/jsp-api.jar"/>
+	<classpathentry kind="var" path="TOMCAT_HOME/lib/el-api.jar"/>
+	<classpathentry kind="var" path="TOMCAT_HOME/lib/annotations-api.jar"/>
+	<classpathentry kind="output" path="WEB-INF/classes"/>
+</classpath>

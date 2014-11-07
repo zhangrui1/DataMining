@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	<head>
+		<style type="text/css">
+			html, body {
+				height: 100%;
+			}/*高さ100%に指定*/
+			.centerMiddle {
+				margin: -200px 0 0 -300px; /*縦横の半分をネガティブマージンでずらす*/
+				position: absolute; /*body要素に対して絶対配置*/
+				top: 50%; /*上端を中央に*/
+				left: 50%; /*左端を中央に*/
+				width: 600px; /*横幅*/
+				height: 400px; /*縦幅*/
+				background-color: #fff;
+			}
+			#mytable {
+				width: 700px;
+				margin: 0 0 0 1px;
+				padding: 0;
+				border: 0;
+				border-spacing: 0;
+				border-collapse: collapse;
+			}
+			caption {
+				padding: 0 0 5px 0;
+				font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+				text-align: right;
+			}
+			th {
+				font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+				color: #4f6b72;
+				border: 1px solid #c1dad7;
+				letter-spacing: 2px;
+				text-transform: uppercase;
+				text-align: left;
+				padding: 6px 6px 6px 12px;
+				background: #cae8ea url(
+				"img/css/bg_header.jpg") no-repeat;
+			}
+			th.nobg {
+				border-top: 0;
+				border-left: 0;
+				background: none;
+			}
+			td {
+				border: 1px solid #c1dad7;
+				background: #fff;
+				padding: 6px 6px 6px 12px;
+				color: #4f6b72;
+			}
+			td.alt {
+				background: #F5FAFA;
+				color: #797268;
+			}
+			th.spec {
+				background: #fff url("img/css/bullet1.gif") no-repeat;
+				font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+			}
+			th.specalt {
+				background: #f5fafa url("img/css/bullet2.gif") no-repeat;
+				font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+				color: #797268;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="centerMiddle">
+			<table id="mytable">
+				<caption>
+					データマッチング for SCF powered by フリーダム・グループ
+				</caption>
+				<tr>
+					<td class="alt"><div>来場フラグの記憶</div><br/>
+						<div style="font-size:small">
+							納品データの検証のために実行する。
+						</div>
+					</td>
+					<td>
+						<form id="form2" name="form2" action="/DataMining/VisitorCheckForScf" onsubmit="return toNextPage('goHomeBtn2');" target="_parent" >
+							<div>
+								<input type="submit" value="DB保存" id="goHomeBtn2"/>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt"><div>バーコード照合結果データ(名刺＆リクエストコード)の作成</div><br/>
+						<div style="font-size:small">
+						    1. F:\matching\scf\dataフォルダに名刺情報マッチングデータを配置<br/><br/>
+						    2. ダウンロードボタンを押下すると、タブ区切りのCSV形式の納品データ(拡張子はTXT)を取得できる<br/><br/>
+						    3. MS Excelで全ての列を文字列形式にてインポートすることで、納品データが完成<br/><br/>
+						</div>
+					</td>
+					<td>
+						<form id="form1" name="form1" action="/DataMining/BarcodeMatchingForScf" onsubmit="return toNextPage('goHomeBtn1');" target="_parent" >
+							<div>
+								<select name="mode">
+									<option value="match">マッチング</option>
+									<option value="unmatch">アンマッチング</option>
+								</select>
+							</div>
+							<div>
+								<input type="submit" value="ダウンロード" id="goHomeBtn1"/>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt"><div>事前登録マスターのダウンロード</div><br/>
+					</td>
+					<td>
+						<form id="form3" name="form3" action="/DataMining/MasterPreDataDLForScf" onsubmit="return toNextPage('goHomeBtn3');" target="_parent" >
+							<div>
+								<input type="submit" value="DL" id="goHomeBtn3"/>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt"><div>当日登録マスターのダウンロード</div><br/>
+					</td>
+					<td>
+						<form id="form4" name="form4" action="/DataMining/MasterAppDataDLForScf" onsubmit="return toNextPage('goHomeBtn4');" target="_parent" >
+							<div>
+								<input type="submit" value="DL" id="goHomeBtn4"/>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt"><div>横河電機向け当日登録マスターのダウンロード</div><br/>
+					</td>
+					<td>
+						<form id="form5" name="form5" action="/DataMining/MasterAppDataDLForScfYokogawa" onsubmit="return toNextPage('goHomeBtn5');" target="_parent" >
+							<div>
+								<input type="submit" value="ダウンロード" id="goHomeBtn5"/>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td class="alt"><div>出展者データの重複チェック</div><br/>
+					</td>
+					<td>
+						<form id="form6" name="form6" action="/DataMining/ExhibiDataDupulicateCheckForScf" onsubmit="return toNextPage('goHomeBtn6');" target="_parent" >
+							<div>
+								<input type="submit" value="実行" id="goHomeBtn5"/>
+							</div>
+						</form>
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<br/>
+			<div>
+				<a href ="../index.html">トップに戻る</a>
+			</div>
+		</div>
+	</body>
+</html>

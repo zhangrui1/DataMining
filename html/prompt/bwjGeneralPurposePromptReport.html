@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<style type="text/css">
+html,body {
+	height: 100%;
+} /*高さ100%に指定*/
+.centerMiddle {
+	margin: -200px 0 0 -300px; /*縦横の半分をネガティブマージンでずらす*/
+	position: absolute; /*body要素に対して絶対配置*/
+	top: 40%; /*上端を中央に*/
+	left: 50%; /*左端を中央に*/
+	width: 600px; /*横幅*/
+	height: 400px; /*縦幅*/
+	background-color: #fff;
+}
+
+#mytable {
+	width: 700px;
+	margin: 0 0 0 1px;
+	padding: 0;
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+caption {
+	padding: 0 0 5px 0;
+	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	text-align: right;
+}
+
+th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border: 1px solid #c1dad7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #cae8ea url(
+				"img/css/bg_header.jpg") no-repeat;
+}
+
+th.nobg {
+	border-top: 0;
+	border-left: 0;
+	background: none;
+}
+
+td {
+	border: 1px solid #c1dad7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #4f6b72;
+}
+
+td.alt {
+	background: #F5FAFA;
+	color: #797268;
+}
+
+th.spec {
+	background: #fff url("img/css/bullet1.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+th.specalt {
+	background: #f5fafa url("img/css/bullet2.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #797268;
+}
+</style>
+</head>
+<body>
+	<div class="centerMiddle">
+		<table id="mytable">
+			<caption>汎用速報集計サービス powered by フリーダム・グループ</caption>
+			<tr>
+				<td class="alt">1.データベースの初期化<br />
+					<div style="font-size: small;">※展示会の会期日程を基にバーコードデータを格納するDBを作成します</div>
+					<br />
+					<div style="font-size: small; color: blue;">バーコードデータ(txt),
+						config.xml, config.xsdを選択してください</div></td>
+				<td>
+					<form id="form1" name="form1"
+						action="/DataMining/ResetForGeneralPurposePromptReport"
+						enctype="multipart/form-data" method="post">
+						<input type="file" name="files" multiple /><br /> <input
+							type="submit" value="実行する" id="goHomeBtn1" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt">【BWJ専用】2.バーコードデータの登録</td>
+				<td>
+					<form id="form2_1" name="form2_1"
+						action="/DataMining/BwjUploadRfidDataForGeneralPurposePromptReport"
+						method="post">
+						<input type="submit" value="実行する" id="goHomeBtn2_1" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt">【BWJ専用】3.速報集計の実行<br />
+					<div style="font-size: small">※新規登録数やリピーター数を計算し、レポートを表示します</div></td>
+				<td>
+					<form id="form3_1" name="form3_1"
+						action="/DataMining/BwjGeneralPurposePromptReportExecute"
+						method="post">
+						<input type="submit" value="実行する" id="goHomeBtn3_1" />
+					</form>
+				</td>
+			</tr>
+		</table>
+		<br /> <br />
+		<table id="mytable">
+			<caption>【BWJ】統計データ作成サービス powered by フリーダム・グループ</caption>
+			<tr>
+				<td class="alt">来場履歴データの登録<br /> <br />
+					<div style="font-size: x-small">※バーコードデータをDB登録する</div></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/BwjUploadVisitorsHistory"
+						enctype="multipart/form-data" method="post">
+						<input type="file" name="files" multiple /><br /> <input
+							type="submit" value="実行する" id="goHomeBtn4" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt">詳細集計 ホール別×業種別(シングル／マルチ)<br /> <br />
+					<div style="font-size: x-small">※ホールごとにシングル／マルチ方式で集計します</div></td>
+				<td>
+					<form id="form5" name="form5"
+						action="/DataMining/BwjGateCalculateMultiType"
+						enctype="multipart/form-data" method="post">
+						<input type="file" name="files" multiple /><br />
+						※xml,xsdをアップロードします
+						<table>
+							<tr>
+								<td class="alt">対象日付 <select name="day">
+										<option value="19">2013/05/19</option>
+										<option value="20">2013/05/20</option>
+										<option value="21">2013/05/21</option>
+								</select></td>
+							</tr>
+						</table>
+						<input type="submit" value="集計する" id="goHomeBtn2_1" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt">詳細集計 ホール別×業種別×時間帯毎</td>
+				<td>
+					<form id="form6" name="form6" action="/DataMining/BwjGateAnalyze"
+						enctype="multipart/form-data" method="post">
+						<input type="file" name="files" multiple /><br />
+						<table>
+							<tr>
+								<td class="alt">対象日付 <select name="day">
+										<option value="19">2013/05/19</option>
+										<option value="20">2013/05/20</option>
+										<option value="21">2013/05/21</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td class="alt">時間帯 <select name="time">
+										<option value="19">指定しない</option>
+										<option value="10">9:00-10:00</option>
+										<option value="11">9:00-11:00</option>
+										<option value="12">9:00-12:00</option>
+										<option value="13">9:00-13:00</option>
+										<option value="14">9:00-14:00</option>
+										<option value="15">9:00-15:00</option>
+										<option value="16">9:00-16:00</option>
+										<option value="17">9:00-17:00</option>
+										<option value="18">9:00-18:00</option>
+								</select></td>
+							</tr>
+						</table>
+						<input type="submit" value="分析する" id="goHomeBtn2_1" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt">詳細集計 ホール別×時間帯毎</td>
+				<td>
+					<form id="form7" name="form7"
+						action="/DataMining/BwjGateAnalyzeAuto"
+						enctype="multipart/form-data" method="post">
+						<input type="file" name="files" multiple /><br />
+						<table>
+							<tr>
+								<td class="alt">対象日付 <select name="day">
+										<option value="19">2013/05/19</option>
+										<option value="20">2013/05/20</option>
+										<option value="21">2013/05/21</option>
+								</select></td>
+							</tr>
+						</table>
+						<input type="submit" value="分析する" id="goHomeBtn2_1" />
+					</form>
+				</td>
+			</tr>
+		</table>
+		<div>
+			<a href="../index.html">トップに戻る</a>
+		</div>
+	</div>
+</body>
+</html>

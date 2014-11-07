@@ -1,0 +1,671 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<style type="text/css">
+html,body {
+	height: 100%;
+} /*高さ100%に指定*/
+.centerMiddle {
+	margin: -200px 0 0 -300px; /*縦横の半分をネガティブマージンでずらす*/
+	position: absolute; /*body要素に対して絶対配置*/
+	top: 50%; /*上端を中央に*/
+	left: 50%; /*左端を中央に*/
+	width: 600px; /*横幅*/
+	height: 400px; /*縦幅*/
+	background-color: #fff;
+}
+
+#mytable1,#mytable2 {
+	width: 700px;
+	margin: 0 0 0 1px;
+	padding: 0;
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+caption {
+	padding: 0 0 5px 0;
+	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	text-align: right;
+}
+
+th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border: 1px solid #c1dad7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #cae8ea url(
+				"img/css/bg_header.jpg") no-repeat;
+}
+
+th.nobg {
+	border-top: 0;
+	border-left: 0;
+	background: none;
+}
+
+td {
+	border: 1px solid #c1dad7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #4f6b72;
+}
+
+td.alt {
+	background: #F5FAFA;
+	color: #797268;
+}
+
+td.ilt {
+	background: #FFDAB9;
+	color: #797268;
+}
+
+td.duplicate {
+	background: #CCCCCC;
+	color: #AAAAAA;
+}
+
+th.spec {
+	background: #fff url("img/css/bullet1.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+th.specalt {
+	background: #f5fafa url("img/css/bullet2.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #797268;
+}
+</style>
+<!--
+<script type="text/javascript">
+	function change(obj) {
+		if ("none" == obj.value) {
+			var table1 = document.getElementById("mytable1");
+			table1.style.display = 'none';
+			var table2 = document.getElementById("mytable2");
+			table2.style.display = 'block';
+		} else {
+			var table1 = document.getElementById("mytable1");
+			table1.style.display = 'block';
+			var table2 = document.getElementById("mytable2");
+			table2.style.display = 'none';
+		}
+	}
+</script>
+-->
+</head>
+<body>
+	<div class="centerMiddle">
+		<!--
+		<select id="changeFlg" name="changeFlg" onChange="change(this)">
+			<option value="none">バーコード貸出を行わない</option>
+			<option value="barcode">バーコード貸出を行う</option>
+		</select>
+-->
+		<table id="mytable1">
+			<caption>データマッチング for MESAGO powered by フリーダム・グループ</caption>
+			<tr>
+				<td class="alt">【1次納品データ】DB初期化<br /> <br />
+					<div style="font-size: x-small">※ホール入口バーコードデータの初期化</div></td>
+				<td>
+					<form id="form2" name="form3"
+						action="/DataMining/ResetDBForMesagoPromptReport"
+						onsubmit="return toNextPage('goHomeBtn3');" target="_parent">
+						<input type="submit" value="実行する" id="goHomeBtn3" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt">【1次納品データ】バーコードデータの登録<br /> <br />
+					<div style="font-size: x-small">※ホール入口バーコードデータをDB登録する</div></td>
+				<td>
+					<form id="form1" name="form1"
+						action="/DataMining/InitializeDBForMesagoPromptReport"
+						onsubmit="return toNextPage('goHomeBtn1');" target="_parent">
+						<input type="submit" value="実行する" id="goHomeBtn1" />
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="duplicate"><div>【1次納品データ】バーコード照合結果データ(名刺＆リクエストコード)の作成</div>
+					<br />
+					<div style="font-size: small">
+						1. F:\matching\mesago\dataフォルダに名刺情報マッチングデータを配置<br /> <br /> 2.
+						ダウンロードボタンを押下すると、タブ区切りのCSV形式の納品データ(拡張子はTXT)を取得できる<br /> <br /> 3.
+						MS Excelで全ての列を文字列形式にてインポートすることで、納品データが完成<br /> <br />
+					</div></td>
+				<td class="duplicate">
+					<form id="form1" name="form1"
+						action="/DataMining/BarcodeMatchingForMesago"
+						onsubmit="return toNextPage('goHomeBtn1');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="match">マッチング</option>
+								<option value="unmatch">アンマッチング</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="ダウンロード" id="goHomeBtn1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>BWJTokyo【1次納品データ】バーコード照合結果データ(名刺＆リクエストコード)の作成</div>
+					<br />
+					<div style="font-size: small">
+						1. F:\matching\mesago\dataフォルダに名刺情報マッチングデータを配置<br /> <br /> 2.
+						ダウンロードボタンを押下すると、タブ区切りのCSV形式の納品データ(拡張子はTXT)を取得できる<br /> <br /> 3.
+						MS Excelで全ての列を文字列形式にてインポートすることで、納品データが完成<br /> <br />
+					</div></td>
+				<td>
+					<form id="form1" name="form1"
+						action="/DataMining/BarcodeMatchingForMesagoTokyo"
+						onsubmit="return toNextPage('goHomeBtn1');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="match">マッチング</option>
+								<option value="unmatch">アンマッチング</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="ダウンロード" id="goHomeBtn1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>ILT2014【1次納品データ】バーコード照合結果データ(名刺＆リクエストコード)の作成</div>
+				</td>
+				<td>
+					<form id="form1" name="form1"
+						action="/DataMining/BarcodeMatchingForIlt"
+						onsubmit="return toNextPage('goHomeBtn1');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="match">マッチング</option>
+								<option value="unmatch">アンマッチング</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="ダウンロード" id="goHomeBtn1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="duplicate"><div>【1次納品データ】事前登録マスターのダウンロード</div> <br /></td>
+				<td class="duplicate">
+					<form id="form3" name="form3"
+						action="/DataMining/MasterPreDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn3');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn3" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="duplicate"><div>【1次納品データ】当日登録マスターのダウンロード</div> <br /></td>
+				<td class="duplicate">
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】事前登録マスター(来場履歴付き)のダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterPreDataWithRfidDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】当日登録マスター(来場履歴付き)のダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppDataWithRfidDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>ILT2014【1次納品データ】事前登録マスター(来場履歴付き)のダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterPreDataWithRfidDLForIlt"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>ILT2014【1次納品データ】当日登録マスター(来場履歴付き)のダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppDataWithRfidDLForIlt"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】当日未来場者データのダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppointedDataForMesagoNonVisitor"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>【1次納品データ】ILT:当日未来場者データのダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppointedDataForIltNonVisitor"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】事前未来場者データのダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterPreDataForMesagoNonVisitor"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>【1次納品データ】ILT:事前未来場者データのダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterPreDataForIltNonVisitor"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】データクレンジング</div> <br /></td>
+				<td>
+					<form id="form5" name="form5"
+						action="/DataMining/DataCleansingForMesago"
+						onsubmit="return toNextPage('goHomeBtn5');" target="_parent">
+						<div><span style="font-size:9pt;">電話番号修復</span>
+							<select name="restoreTel">
+								<option value="true">実行する</option>
+								<option value="false">実行しない</option>
+							</select>
+							<span style="font-size:9pt;">VIPフラグの分割</span>
+							<select name="divideVipFlg">
+								<option value="true">実行する</option>
+								<option value="false">実行しない</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn5" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】Firstテーブルの住所など修正</div> <br /></td>
+				<td>
+					<form id="form6" name="form6"
+						action="/DataMining/DataCollectingForMesago"
+						onsubmit="return toNextPage('goHomeBtn6');" target="_parent">
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn6" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】Secondテーブルの削除フラグ修正</div> <br /></td>
+				<td>
+					<form id="form6" name="form6"
+						action="/DataMining/DataCollectingForSecondTableMesago"
+						onsubmit="return toNextPage('goHomeBtn8');" target="_parent">
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn8" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】最終マスターのダウンロード</div> <br /></td>
+				<td>
+					<form id="form7" name="form7"
+						action="/DataMining/FinalDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn7');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="normal">納品データ</option>
+								<option value="delete">削除データ</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn7" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>ILF2014出展者の納品データダウンロード</div> <br /></td>
+				<td>
+					<form id="form11" name="form11"
+						action="/DataMining/BarcodeExhibitorMatchingForILF"
+						onsubmit="return toNextPage('goHomeBtn11');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="match">マッチング</option>
+								<option value="unmatch">アンマッチング</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn11" />
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+		<!--
+		<table id="mytable2" style="display: block;">
+			<caption>データマッチング for MESAGO powered by フリーダム・グループ</caption>
+			<tr>
+				<td class="alt"><div>【1次納品データ】未来場者バーコードリストの生成</div></td>
+				<td>
+					<form id="form2" name="form2"
+						action="/DataMining/VisitorCheckForMesago"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<select name="mode">
+								<option value="preentry">事前登録</option>
+								<option value="appointedday">当日入力</option>
+							</select>
+						</div>
+						<div>
+							<input type="file" name="files" multiple />
+						</div>
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn2" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】未来場者データのDL</div></td>
+				<td>
+					<form id="form1" name="form1"
+						action="/DataMining/BarcodeMatchingForMesagoTokyoForNonVisitors"
+						onsubmit="return toNextPage('goHomeBtn1');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="preentry">事前登録</option>
+								<option value="appointedday">当日入力</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="ダウンロード" id="goHomeBtn1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】事前登録 登録券番号によるマッチング</div> <br />
+					<br />
+					<div style="font-size: x-small">※事前登録分の納品データを作成する</div></td>
+				<td>
+					<form id="form2_1" name="form2_1"
+						action="/DataMining/PreentryNumberMatchingForMesago"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="file" name="files" multiple />
+						</div>
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn2_1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】事前登録マスターのダウンロード</div> <br /></td>
+				<td>
+					<form id="form3" name="form3"
+						action="/DataMining/MasterPreDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn3');" target="_parent">
+						<div>
+							<select name="visit">
+								<option value="true">来場者</option>
+								<option value="false">未来場者</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn3" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【1次納品データ】当日登録マスターのダウンロード</div> <br /> <br />
+					<div style="font-size: x-small">※当日登録分の納品データを作成する</div></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							登録券番号の設定 <select name="createUniqueKey">
+								<option value="true">設定する</option>
+								<option value="false">設定しない</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】データクレンジング</div> <br /></td>
+				<td>
+					<form id="form5" name="form5"
+						action="/DataMining/DataCleansingForMesago"
+						onsubmit="return toNextPage('goHomeBtn5');" target="_parent">
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn5" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】データ修正</div> <br /></td>
+				<td>
+					<form id="form6" name="form6"
+						action="/DataMining/DataCollectingForMesago"
+						onsubmit="return toNextPage('goHomeBtn6');" target="_parent">
+						<div>
+							<input type="submit" value="実行する" id="goHomeBtn6" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>【2次納品データ】最終マスターのダウンロード</div> <br /></td>
+				<td>
+					<form id="form7" name="form7"
+						action="/DataMining/FinalDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn7');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="normal">納品データ</option>
+								<option value="delete">削除データ</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn7" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>当日バッチデータのダウンロード</div> <br /></td>
+				<td>
+					<form id="form8" name="form8"
+						action="/DataMining/BadgeAppDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn8');" target="_parent">
+						<div>
+							<select name="eps_type">
+								<option value="11.eps">VIP</option>
+								<option value="14.eps">JNA認定講師</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn8" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>当日バッチデータ(学生・その他)のダウンロード</div> <br /></td>
+				<td>
+					<form id="form8" name="form8_1"
+						action="/DataMining/BadgeStudentAppDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn8_1');" target="_parent">
+						<div>
+							<select name="file">
+								<option value="BWJ2014_学生登録_タカラ美容専門学校_追加">BWJ2014_学生登録_タカラ美容専門学校_追加</option>
+								<option value="BWJ2014_団体来場者（学生）登録フォーマット_資生堂美容技術専門学校">BWJ2014_団体来場者（学生）登録フォーマット_資生堂美容技術専門学校</option>
+								<option value="BWJ2014_団体来場者（学生）登録フォーマット_ハリウッドビューティ専門学校">BWJ2014_団体来場者（学生）登録フォーマット_ハリウッドビューティ専門学校</option>
+								<option value="BWJ2014_学生登録_AOBビューティクリエイト専門学校">BWJ2014_学生登録_AOBビューティクリエイト専門学校</option>
+								<option value="BWJ2014_学生登録_たかの友梨美容専門学校">BWJ2014_学生登録_たかの友梨美容専門学校</option>
+								<option value="BWJ2014_学生登録_アイエステティック美容専門学校_1_2">BWJ2014_学生登録_アイエステティック美容専門学校_1_2</option>
+								<option value="BWJ2014_学生登録_アイエステティック美容専門学校_3">BWJ2014_学生登録_アイエステティック美容専門学校_3</option>
+								<option value="BWJ2014_学生登録_タカラ美容専門学校">BWJ2014_学生登録_タカラ美容専門学校</option>
+								<option value="BWJ2014_学生登録_パリ総合美容専門学校_柏校">BWJ2014_学生登録_パリ総合美容専門学校_柏校</option>
+								<option value="BWJ2014_学生登録_ヒューマンアカデミー_名古屋校">BWJ2014_学生登録_ヒューマンアカデミー_名古屋校</option>
+								<option value="BWJ2014_学生登録_ヒューマンアカデミー原宿校">BWJ2014_学生登録_ヒューマンアカデミー原宿校</option>
+								<option value="BWJ2014_学生登録_ヒューマンアカデミー横浜校">BWJ2014_学生登録_ヒューマンアカデミー横浜校</option>
+								<option value="BWJ2014_学生登録_フロムハンドメイクアップアカデミー">BWJ2014_学生登録_フロムハンドメイクアップアカデミー</option>
+								<option value="BWJ2014_学生登録_ベルフォートアカデミーオブビューティ">BWJ2014_学生登録_ベルフォートアカデミーオブビューティ</option>
+								<option value="BWJ2014_学生登録_ミスパリエステティックスクール_仙台校">BWJ2014_学生登録_ミスパリエステティックスクール_仙台校</option>
+								<option value="BWJ2014_学生登録_ミスパリエステティックスクール_横浜校">BWJ2014_学生登録_ミスパリエステティックスクール_横浜校</option>
+								<option value="BWJ2014_学生登録_ミスパリエステティック専門学校_名古屋校">BWJ2014_学生登録_ミスパリエステティック専門学校_名古屋校</option>
+								<option value="BWJ2014_学生登録_ミスパリエステティック専門学校_大阪校">BWJ2014_学生登録_ミスパリエステティック専門学校_大阪校</option>
+								<option value="BWJ2014_学生登録_ミスパリビューティ専門学校_千葉校">BWJ2014_学生登録_ミスパリビューティ専門学校_千葉校</option>
+								<option value="BWJ2014_学生登録_ミスパリビューティ専門学校_大宮校">BWJ2014_学生登録_ミスパリビューティ専門学校_大宮校</option>
+								<option value="BWJ2014_学生登録_ミスパリビューティ専門学校学校_東京校">BWJ2014_学生登録_ミスパリビューティ専門学校学校_東京校</option>
+								<option value="BWJ2014_学生登録_ヤマノエステティック総合学院_東京校">BWJ2014_学生登録_ヤマノエステティック総合学院_東京校</option>
+								<option value="BWJ2014_学生登録_ユニバーサルビューティーカレッジ">BWJ2014_学生登録_ユニバーサルビューティーカレッジ</option>
+								<option value="BWJ2014_学生登録_中部ビューティデザインカレッジ">BWJ2014_学生登録_中部ビューティデザインカレッジ</option>
+								<option value="BWJ2014_学生登録_千葉ビューティーアート専門学校">BWJ2014_学生登録_千葉ビューティーアート専門学校</option>
+								<option value="BWJ2014_学生登録_千葉美容専門学校">BWJ2014_学生登録_千葉美容専門学校</option>
+								<option value="BWJ2014_学生登録_国際ファッションビューティ専門学校">BWJ2014_学生登録_国際ファッションビューティ専門学校</option>
+								<option value="BWJ2014_学生登録_国際理容美容専門学校">BWJ2014_学生登録_国際理容美容専門学校</option>
+								<option value="BWJ2014_学生登録_大宮ビューティーアート専門学校">BWJ2014_学生登録_大宮ビューティーアート専門学校</option>
+								<option value="BWJ2014_学生登録_専門学校日本スクールオブビジネス21">BWJ2014_学生登録_専門学校日本スクールオブビジネス21</option>
+								<option value="BWJ2014_学生登録_山野美容芸術短期大学">BWJ2014_学生登録_山野美容芸術短期大学</option>
+								<option value="BWJ2014_学生登録_日本美容専門学校">BWJ2014_学生登録_日本美容専門学校</option>
+								<option value="BWJ2014_学生登録_早稲田美容専門学校">BWJ2014_学生登録_早稲田美容専門学校</option>
+								<option value="BWJ2014_学生登録_東京ビューティーアート専門学校">BWJ2014_学生登録_東京ビューティーアート専門学校</option>
+								<option value="BWJ2014_学生登録_東京ヘアメイク専門学校">BWJ2014_学生登録_東京ヘアメイク専門学校</option>
+								<option value="BWJ2014_学生登録_東京ベルエポック美容専門学校">BWJ2014_学生登録_東京ベルエポック美容専門学校</option>
+								<option value="BWJ2014_学生登録_東京総合美容専門学校">BWJ2014_学生登録_東京総合美容専門学校</option>
+								<option value="BWJ2014_学生登録_東京美容専門学校">BWJ2014_学生登録_東京美容専門学校</option>
+								<option value="BWJ2014_学生登録_横浜美容専門学校">BWJ2014_学生登録_横浜美容専門学校</option>
+								<option value="BWJ2014_学生登録_横浜ｆカレッジ">BWJ2014_学生登録_横浜ｆカレッジ</option>
+								<option value="BWJ2014_学生登録_目白ファッション&アートカレッジ">BWJ2014_学生登録_目白ファッション&アートカレッジ</option>
+								<option value="BWJ2014_学生登録_窪田理容美容専門学校">BWJ2014_学生登録_窪田理容美容専門学校</option>
+								<option value="BWJ2014_学生登録_群馬県美容専門学校">BWJ2014_学生登録_群馬県美容専門学校</option>
+							</select>
+						</div>
+						<div>
+							学生連番(直前番号) <input name="studentCount" />
+						</div>
+						<div>
+							その他連番(直前番号) <input name="otherCount" />
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn8_1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>事前バッチデータのダウンロード</div> <br /></td>
+				<td>
+					<form id="form9" name="form9"
+						action="/DataMining/BadgePreentryDataDLForMesago"
+						onsubmit="return toNextPage('goHomeBtn9');" target="_parent">
+						<div>
+							<select name="type">
+								<option value="99">ALL</option>
+								<option value="11">VIP</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn9" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>BWJ2014出展者の納品データダウンロード</div> <br /></td>
+				<td>
+					<form id="form10" name="form10"
+						action="/DataMining/BarcodeExhibitorMatchingForMesago"
+						onsubmit="return toNextPage('goHomeBtn10');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="match">マッチング</option>
+								<option value="unmatch">アンマッチング</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn10" />
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+		-->
+		<br /> <br />
+		<div>
+			<a href="../index.html">トップに戻る</a>
+		</div>
+	</div>
+</body>
+</html>

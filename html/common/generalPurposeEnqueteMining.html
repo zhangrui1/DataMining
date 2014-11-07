@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<style type="text/css">
+html,body {
+	height: 100%;
+} /*高さ100%に指定*/
+.centerMiddle {
+	margin: -200px 0 0 -300px; /*縦横の半分をネガティブマージンでずらす*/
+	position: absolute; /*body要素に対して絶対配置*/
+	top: 50%; /*上端を中央に*/
+	left: 50%; /*左端を中央に*/
+	width: 600px; /*横幅*/
+	height: 400px; /*縦幅*/
+	background-color: #fff;
+}
+
+#mytable {
+	width: 700px;
+	margin: 0 0 0 1px;
+	padding: 0;
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+caption {
+	padding: 0 0 5px 0;
+	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	text-align: right;
+}
+
+th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border: 1px solid #c1dad7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #cae8ea url(
+				"img/css/bg_header.jpg") no-repeat;
+}
+
+th.nobg {
+	border-top: 0;
+	border-left: 0;
+	background: none;
+}
+
+td {
+	border: 1px solid #c1dad7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #4f6b72;
+}
+
+td.alt {
+	background: #F5FAFA;
+	color: #797268;
+}
+
+th.spec {
+	background: #fff url("img/css/bullet1.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+th.specalt {
+	background: #f5fafa url("img/css/bullet2.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #797268;
+}
+</style>
+</head>
+<body>
+	<div class="centerMiddle">
+		<table id="mytable">
+			<caption>アンケート集計サービス powered by フリーダム・グループ</caption>
+			<tr>
+				<td class="alt"><div>1.汎用アンケート集計</div> <br />
+					<div style="font-size: small; color: blue;">
+						※アンケートデータ、config.xml、config.xsdをF:\enquete\sampleに配置してください<br />
+						<br />
+					</div></td>
+				<td>
+					<form name="form1" action="/DataMining/GeneralPurposeEnqueteMining"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="file" name="files" multiple /><br /> <input
+								type="submit" value="ダウンロード" id="goHomeBtn1" /><br />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>2.汎用展示会当日入力データ集計</div> <br />
+					<div style="font-size: small; color: blue;">
+						※当日入力データ、config.xml、config.xsdをF:\enquete\sampleに配置してください<br /> <br />
+					</div></td>
+				<td>
+					<form name="form2" action="/DataMining/GeneralExhibitionDataMining"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="file" name="files" multiple /><br /> <input
+								type="submit" value="ダウンロード" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>エラーログの確認</div> <br />
+					<div style="font-size: small; color: blue;">
+						※1もしくは2を実行後に[ダウンロード]ボタンを押下してください<br /> <br />
+					</div></td>
+				<td>
+					<form name="form3"
+						action="/DataMining/GeneralPurposeErrorLogDownload"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="submit" value="ダウンロード" />
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+		<br /> <br />
+		<div>
+			<a href="../index.html">トップに戻る</a>
+		</div>
+	</div>
+</body>
+</html>

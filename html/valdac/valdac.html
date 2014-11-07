@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<style type="text/css">
+html,body {
+	height: 100%;
+} /*高さ100%に指定*/
+.centerMiddle {
+	margin: -200px 0 0 -300px; /*縦横の半分をネガティブマージンでずらす*/
+	position: absolute; /*body要素に対して絶対配置*/
+	top: 50%; /*上端を中央に*/
+	left: 50%; /*左端を中央に*/
+	width: 600px; /*横幅*/
+	height: 400px; /*縦幅*/
+	background-color: #fff;
+}
+
+#mytable {
+	width: 700px;
+	margin: 0 0 0 1px;
+	padding: 0;
+	border: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+caption {
+	padding: 0 0 5px 0;
+	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	text-align: right;
+}
+
+th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border: 1px solid #c1dad7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #cae8ea url(
+				"img/css/bg_header.jpg") no-repeat;
+}
+
+th.nobg {
+	border-top: 0;
+	border-left: 0;
+	background: none;
+}
+
+td {
+	border: 1px solid #c1dad7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #4f6b72;
+}
+
+td.alt {
+	background: #F5FAFA;
+	color: #797268;
+}
+
+th.spec {
+	background: #fff url("img/css/bullet1.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+th.specalt {
+	background: #f5fafa url("img/css/bullet2.gif") no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #797268;
+}
+</style>
+</head>
+<body>
+	<div class="centerMiddle">
+		<table id="mytable">
+			<caption>東洋バルブ製作所</caption>
+			<tr>
+				<td class="alt"><div>テーブル半角全角変更</div> <br />
+					<div style="font-size: small">
+						</div></td>
+				<td>
+					<form id="form1" name="form1"
+						action="/DataMining/MasterDataForValdac"
+						enctype="multipart/form-data" method="post">
+						<div>
+							開始のID番号 <input type="text" name="event" />
+						</div>
+						<br />
+						<div>
+							<input type="file" name="files" multiple />
+						</div>
+						<br />
+						<div>
+							<input type="submit" value="ダウンロード" id="goHomeBtn1" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>DBにインポート</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/InsertIntoTable"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="file" name="files" multiple />
+						</div>
+						<div>
+							<small>テーブル名</small>
+							 <select name="tablename">
+								<option value="kikisys">kikisys</option>
+								<option value="kiki">kiki</option>
+								<option value="buhin">buhin</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="インポート" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>機器システム、機器部品の対応関係作成</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/NewRelationTable"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
+		<br /> <br />
+		<div>
+			<a href="../index.html">トップに戻る</a>
+		</div>
+	</div>
+</body>
+</html>
