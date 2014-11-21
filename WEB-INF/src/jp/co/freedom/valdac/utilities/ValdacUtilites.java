@@ -40,7 +40,8 @@ public class ValdacUtilites {
 		map.put("1", "10101");
 		map.put("2", "10102");
 		map.put("3", "10103");
-		map.put("4", "10105");
+		map.put("4", "10104");
+		map.put("5", "10105");
 		return map;
 	}
 
@@ -734,7 +735,7 @@ public class ValdacUtilites {
 		// 対応関係テーブルの新ID
 		int count = 1;
 		for(int nIndex=1;nIndex<=ValdacUtilites.KCORD_MAP.size();nIndex++){
-			List<ValdacUserDataDto> allKoujiKikiDataList = userDataList.get(ValdacUtilites.KCORD_MAP.get(nIndex));
+			List<ValdacUserDataDto> allKoujiKikiDataList = userDataList.get(ValdacUtilites.KCORD_MAP.get(String.valueOf(nIndex)));
 			if (allKoujiKikiDataList!=null){
 				for (ValdacUserDataDto userdata : allKoujiKikiDataList) {
 					List<String> cols = new ArrayList<String>();
@@ -984,8 +985,6 @@ public class ValdacUtilites {
 		ResultSet rs = ps.executeQuery(sql);
 		while (rs.next()) {
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
-			ValdacCardDto cardInfo = new ValdacCardDto(); // 名刺情報DTO
-			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
 
 			// 新機器システムID番号
 			userdata.id = rs.getString("kikiSysId"); // バーコード番号
@@ -993,9 +992,6 @@ public class ValdacUtilites {
 			userdata.KikiSysIdOld = StringUtil.concatWithDelimit("",
 					rs.getString("kCode"),
 					rs.getString("kikiSysSeq"));
-
-			userdata.questionInfo = questionInfo;
-			userdata.cardInfo = cardInfo;
 			userDataList.add(userdata);
 		}
 		if (rs != null) {
@@ -1023,8 +1019,6 @@ public class ValdacUtilites {
 		ResultSet rs = ps.executeQuery(sql);
 		while (rs.next()) {
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
-			ValdacCardDto cardInfo = new ValdacCardDto(); // 名刺情報DTO
-			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
 			// 機器Key
 			userdata.kikiIDOld = StringUtil.concatWithDelimit("",
 					rs.getString("kikiIdOld"),
@@ -1038,8 +1032,7 @@ public class ValdacUtilites {
 			// 機器ID番号
 			userdata.kikiID = rs.getString("kikiId");
 
-			userdata.questionInfo = questionInfo;
-			userdata.cardInfo = cardInfo;
+
 			userDataList.add(userdata);
 		}
 		if (rs != null) {
@@ -1076,8 +1069,7 @@ public class ValdacUtilites {
 			// 工事旧ID
 			userdata.koujiIDOld = rs.getString("location");
 
-			userdata.questionInfo = questionInfo;
-			userdata.cardInfo = cardInfo;
+
 			userDataList.add(userdata);
 		}
 		if (rs != null) {
@@ -1096,22 +1088,26 @@ public class ValdacUtilites {
 	 *            DBサーバーへの接続情報
 	 * @return　全ての当日登録データ
 	 * @throws SQLException
+	 * @throws IOException
 	 */
-	public static List<ValdacUserDataDto> getKoujiKikiIdData(Connection conn,String KCodename)
-			throws SQLException {
+	public static List<ValdacUserDataDto> getKoujiKikiIdData(Connection conn,String KCodename,HttpServletRequest request,
+			HttpServletResponse response)
+			throws SQLException, IOException {
+
 		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
 		String sql="";
-		if (KCodename=="10104-1"){
-			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='10104' and  k04KjSeq>'110';";
-		}else if (KCodename=="10104-2"){
-			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='10104' and  k04KjSeq<='110';";
-		}else{
-			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='"+KCodename+"' ;";
-		}
+		sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='"+KCodename+"' ;";
+//		if (KCodename=="10104-1"){
+//			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='10104' and  k04KjSeq>'110';";
+//		}else if (KCodename=="10104-2"){
+//			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='10104' and  k04KjSeq<='110';";
+//		}else{
+//			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='"+KCodename+"' ;";
+//		}
 
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery(sql);
-		String count="1";
+		int count=1;
 		while (rs.next()) {
 			count=count+1;
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
@@ -1125,7 +1121,7 @@ public class ValdacUtilites {
 			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k04KikiBunruiSeq"),2,"0");
 
 //			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
-            userdata.id=count+1;
+            userdata.id=Integer.toString(count);
 			// 工事旧ID
 			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
 			// 弁旧ID
@@ -1133,8 +1129,6 @@ public class ValdacUtilites {
 			// kiki旧ID
 			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
 
-			userdata.questionInfo = questionInfo;
-			userdata.cardInfo = cardInfo;
 			userDataList.add(userdata);
 		}
 		if (rs != null) {
@@ -1184,8 +1178,7 @@ public class ValdacUtilites {
 			// 機器ID番号
 			userdata.buhinID = rs.getString("buhinId");
 
-			userdata.questionInfo = questionInfo;
-			userdata.cardInfo = cardInfo;
+
 			userDataList.add(userdata);
 		}
 		if (rs != null) {

@@ -2,15 +2,16 @@ package jp.co.freedom.master.dto.valdac;
 
 import java.util.Map;
 
-import jp.co.freedom.master.dto.UserDataDto;
-
 /**
  * 【LTT】ユーザー情報保持クラス
  *
  * @author フリーダム・グループ
  *
  */
-public class ValdacUserDataDto extends UserDataDto {
+public class ValdacUserDataDto  {
+
+	/** 機器システムID */
+	public String id;
 
 	/** 機器システムID */
 	public String KikiSysId;
@@ -41,9 +42,6 @@ public class ValdacUserDataDto extends UserDataDto {
 
 	/** コンストラクタ */
 	public ValdacUserDataDto() {
-		super();
-		super.cardInfo = new ValdacCardDto();
-		super.questionInfo = new ValdacQuestionDto();
 	}
 
 }

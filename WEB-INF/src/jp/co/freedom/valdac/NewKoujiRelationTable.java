@@ -77,7 +77,8 @@ public class NewKoujiRelationTable extends HttpServlet {
 				String KCodename1 = ValdacUtilites.KCORD_MAP.get(String
 						.valueOf(nIndex));
 				List<ValdacUserDataDto> allKoujiKikiDataList = ValdacUtilites
-						.getKoujiKikiIdData(conn, KCodename1);
+						.getKoujiKikiIdData(conn, KCodename1, request,
+								 response);
 
 				for (ValdacUserDataDto userData : allKoujiKikiDataList) {
 
@@ -110,7 +111,7 @@ public class NewKoujiRelationTable extends HttpServlet {
 					}
 				}
 
-				allKoujiKikiData.put(ValdacUtilites.KCORD_MAP.get(nIndex),
+				allKoujiKikiData.put(KCodename1,
 						allKoujiKikiDataList);
 			}
 			if (!ValdacUtilites.downLoadKoujiRealation2(request, response,
