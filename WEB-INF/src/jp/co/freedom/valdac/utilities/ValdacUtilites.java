@@ -1123,8 +1123,6 @@ public class ValdacUtilites {
 		while (rs.next()) {
 			count=count+1;
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
-			ValdacCardDto cardInfo = new ValdacCardDto(); // 名刺情報DTO
-			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
 
 			String KCode=StringUtil.concatWithDelimit("", "0",rs.getString("k04KCode"));
 			String KjSeq=StringUtil.convertFixedLengthData(rs.getString("k04KjSeq"),3,"0");
@@ -1163,6 +1161,68 @@ public class ValdacUtilites {
 		}
 		return userDataList;
 	}
+
+
+	/**
+	 * 工事の点検機器履歴
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> getTenkenRirekiIdData(Connection conn,String KCodename)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql="SELECT * FROM k05TenkenRireki ;";
+
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=1;
+		while (rs.next()) {
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			String KCode=StringUtil.concatWithDelimit("", "0",rs.getString("k05KCode"));
+			String KjSeq=StringUtil.convertFixedLengthData(rs.getString("k05KjSeq"),3,"0");
+			String Kikisys=StringUtil.concatWithDelimit("", "0",rs.getString("k05KikiSysId"));
+			String KikiBunrui=rs.getString("k05KikiBunrui");
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k05KikiBunruiSeq"),2,"0");
+
+//			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+            userdata.id=Integer.toString(count);
+			// 工事旧ID
+			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+//			//点検結果部分
+//			userdata.tenkenSisin=rs.getString("k04TenkenSisin");
+//			userdata.tenkenRank=rs.getString("k04TenkenRank");
+//			userdata.tenkenNaiyo=rs.getString("k04TenkenNaiyo");
+//			userdata.gyosya=rs.getString("k04Gyosya");
+//			userdata.tenkenKekka0=rs.getString("k04Mae0Nen");
+//			userdata.tenkenKekka1=rs.getString("k04Mae1Nen");
+//			userdata.tenkenKekka2=rs.getString("k04Mae2Nen");
+//			userdata.tenkenKekka3=rs.getString("k04Mae3Nen");
+//			userdata.tenkenKekka4=rs.getString("k04Mae4Nen");
+//			userdata.tenkenKekka5=rs.getString("k04Mae5Nen");
+
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
 	/**
 	 * 機器部品ID取得
 	 *

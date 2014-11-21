@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,8 @@ public class NewKoujiRelationTable extends HttpServlet {
 			throws IOException, ServletException {
 		// 顧客名
 		Object KCodeObj = request.getParameter("KCode");
-		String KCodename = (String) KCodeObj;
-		assert StringUtil.isNotEmpty(KCodename);
+		String TableName = (String) KCodeObj;
+		assert StringUtil.isNotEmpty(TableName);
 		Connection conn = null;
 		try {
 			// JDBCドライバーのロード
@@ -76,9 +77,15 @@ public class NewKoujiRelationTable extends HttpServlet {
 			for (int nIndex = 1; nIndex <= ValdacUtilites.KCORD_MAP.size(); nIndex++) {
 				String KCodename1 = ValdacUtilites.KCORD_MAP.get(String
 						.valueOf(nIndex));
-				List<ValdacUserDataDto> allKoujiKikiDataList = ValdacUtilites
-						.getKoujiKikiIdData(conn, KCodename1, request,
-								 response);
+				List<ValdacUserDataDto> allKoujiKikiDataList = new ArrayList<ValdacUserDataDto>();
+				if("k04".equals(TableName)){
+					 allKoujiKikiDataList = ValdacUtilites
+							.getKoujiKikiIdData(conn, KCodename1, request,
+									 response);
+				}else if ("k05".equals(TableName)){
+					 allKoujiKikiDataList = ValdacUtilites
+							.getTenkenRirekiIdData(conn, TableName);
+				}
 
 				for (ValdacUserDataDto userData : allKoujiKikiDataList) {
 
