@@ -33,6 +33,17 @@ public class ValdacUtilites {
 
 	private static Object mTable;
 
+	/** 都道府県コード */
+	public static Map<String, String> KCORD_MAP = createKcordMap();
+	private static Map<String, String> createKcordMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("1", "10101");
+		map.put("2", "10102");
+		map.put("3", "10103");
+		map.put("4", "10105");
+		return map;
+	}
+
 	/**
 	 * ユーザーデータのインスタンスを生成しリストに格納
 	 *
@@ -627,6 +638,128 @@ public class ValdacUtilites {
 	}
 
 	/**
+	 * 照合結果をTXT形式でダウンロード
+	 *
+	 * @param request
+	 *            HttpServletRequest
+	 * @param response
+	 *            HttpServletResponse
+	 * @param outputFileName
+	 *            出力ファイル名
+	 * @param userDataList
+	 *            照合結果を格納するリスト
+	 * @param dim
+	 *            デリミタ
+	 * @param catalogList
+	 *            カタログリスト
+	 * @return ダウンロード実行結果の成否のブール値
+	 * @throws IOException
+	 */
+	public static boolean downLoadKoujiRealation(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			List<ValdacUserDataDto> userDataList, String dim) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定する
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(StringUtil.enquote("kouji"));
+		header.add(StringUtil.enquote("koujiOld"));
+		header.add(StringUtil.enquote("kikisysid"));
+		header.add(StringUtil.enquote("kikisysidOld"));
+		header.add(StringUtil.enquote("kikiid"));
+		header.add(StringUtil.enquote("kikiidOld"));
+
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		// 対応関係テーブルの新ID
+		int count = 1;
+
+		for (ValdacUserDataDto userdata : userDataList) {
+			List<String> cols = new ArrayList<String>();
+//			cols.add(String.valueOf(count++));
+			cols.add(StringUtil.enquote(userdata.id));
+			cols.add(StringUtil.enquote(userdata.koujiID));
+			cols.add(StringUtil.enquote(userdata.koujiIDOld));
+			cols.add(StringUtil.enquote(userdata.KikiSysId));
+			cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
+			cols.add(StringUtil.enquote(userdata.kikiID));
+			cols.add(StringUtil.enquote(userdata.kikiIDOld));
+			FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+		}
+
+		try {
+			writer.close();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean downLoadKoujiRealation2(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			Map<String, List<ValdacUserDataDto>> userDataList, String dim) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定する
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(StringUtil.enquote("kouji"));
+		header.add(StringUtil.enquote("koujiOld"));
+		header.add(StringUtil.enquote("kikisysid"));
+		header.add(StringUtil.enquote("kikisysidOld"));
+		header.add(StringUtil.enquote("kikiid"));
+		header.add(StringUtil.enquote("kikiidOld"));
+
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		// 対応関係テーブルの新ID
+		int count = 1;
+		for(int nIndex=1;nIndex<=ValdacUtilites.KCORD_MAP.size();nIndex++){
+			List<ValdacUserDataDto> allKoujiKikiDataList = userDataList.get(ValdacUtilites.KCORD_MAP.get(nIndex));
+			if (allKoujiKikiDataList!=null){
+				for (ValdacUserDataDto userdata : allKoujiKikiDataList) {
+					List<String> cols = new ArrayList<String>();
+					cols.add(String.valueOf(count++));
+	//				cols.add(StringUtil.enquote(userdata.id));
+					cols.add(StringUtil.enquote(userdata.koujiID));
+					cols.add(StringUtil.enquote(userdata.koujiIDOld));
+					cols.add(StringUtil.enquote(userdata.KikiSysId));
+					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
+					cols.add(StringUtil.enquote(userdata.kikiID));
+					cols.add(StringUtil.enquote(userdata.kikiIDOld));
+					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+				}
+			}
+
+		}
+
+		try {
+			writer.close();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+	/**
 	 * DBの初期化
 	 *
 	 * @param conn
@@ -783,6 +916,57 @@ public class ValdacUtilites {
 		return true;
 	}
 
+	/**
+	 *工事テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLException
+	 */
+	public static boolean importDataKouji(Connection conn,
+			List<String[]> csvDataList, String tablename) throws SQLException {
+		int count = 60000000;
+		for (String[] csvData : csvDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+			Integer leng = csvData.length;
+			for (int nIndex = 1; nIndex <= 15; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+			ps.setInt(++position, count++);
+			for (int nIndex =3; nIndex <= 10; nIndex++) {
+				ps.setString(++position, csvData[nIndex]);
+			}
+
+			for (int nIndex = 15; nIndex <= 15; nIndex++) {
+				ps.setString(++position, csvData[nIndex]);
+			}
+
+			for (int nIndex = 16; nIndex <= 16; nIndex++) {
+				String location=StringUtil.concatWithDelimit("",csvData[1],csvData[2]);
+				ps.setString(++position,location);
+			}
+			ps.setString(++position, "1");//status
+			ps.setString(++position, "");//person
+			ps.setString(++position, "2014/12/01");//person
+			ps.setString(++position, "2014/12/01");//person
+
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * 機器システムID取得
@@ -805,6 +989,7 @@ public class ValdacUtilites {
 
 			// 新機器システムID番号
 			userdata.id = rs.getString("kikiSysId"); // バーコード番号
+			userdata.KikiSysId = rs.getString("kikiSysId"); // バーコード番号
 			userdata.KikiSysIdOld = StringUtil.concatWithDelimit("",
 					rs.getString("kCode"),
 					rs.getString("kikiSysSeq"));
@@ -866,6 +1051,100 @@ public class ValdacUtilites {
 		return userDataList;
 	}
 
+	/**
+	 * 工事ID取得
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 */
+	public static List<ValdacUserDataDto> getKoujiIdData(Connection conn)
+			throws SQLException {
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql = "SELECT * FROM kouji;";
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		while (rs.next()) {
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+			ValdacCardDto cardInfo = new ValdacCardDto(); // 名刺情報DTO
+			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
+
+			userdata.id = rs.getString("id");
+			// 工事新ID
+			userdata.koujiID = rs.getString("id");
+			// 工事旧ID
+			userdata.koujiIDOld = rs.getString("location");
+
+			userdata.questionInfo = questionInfo;
+			userdata.cardInfo = cardInfo;
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
+	/**
+	 * 工事の点検機器
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 */
+	public static List<ValdacUserDataDto> getKoujiKikiIdData(Connection conn,String KCodename)
+			throws SQLException {
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql="";
+		if (KCodename=="10104-1"){
+			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='10104' and  k04KjSeq>'110';";
+		}else if (KCodename=="10104-2"){
+			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='10104' and  k04KjSeq<='110';";
+		}else{
+			 sql = "SELECT * FROM k04tenkenkiki  where k04KCode ='"+KCodename+"' ;";
+		}
+
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		String count="1";
+		while (rs.next()) {
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+			ValdacCardDto cardInfo = new ValdacCardDto(); // 名刺情報DTO
+			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
+
+			String KCode=StringUtil.concatWithDelimit("", "0",rs.getString("k04KCode"));
+			String KjSeq=StringUtil.convertFixedLengthData(rs.getString("k04KjSeq"),3,"0");
+			String Kikisys=StringUtil.concatWithDelimit("", "0",rs.getString("k04KikiSysId"));
+			String KikiBunrui=rs.getString("k04KikiBunrui");
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k04KikiBunruiSeq"),2,"0");
+
+//			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+            userdata.id=count+1;
+			// 工事旧ID
+			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+			userdata.questionInfo = questionInfo;
+			userdata.cardInfo = cardInfo;
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
 	/**
 	 * 機器部品ID取得
 	 *
@@ -1026,5 +1305,53 @@ public class ValdacUtilites {
 
 		return true;
 	}
+
+
+/**
+ *
+ * 機器システムの旧IDをKey
+ *
+ * */
+	public static Map<String, ValdacUserDataDto> getallKikiSysIdDataMap(
+			List<ValdacUserDataDto> AllDatalist) {
+		Map<String, ValdacUserDataDto> map = new HashMap<String, ValdacUserDataDto>();
+		for (ValdacUserDataDto userData : AllDatalist) {
+			if (StringUtil.isNotEmpty(userData.id)) {
+				map.put(userData.KikiSysIdOld, userData);
+			}
+		}
+		return map;
+	}
+	/**
+	 *
+	 * Kiki旧IDをKey
+	 *
+	 * */
+		public static Map<String, ValdacUserDataDto> getallKikiDataMap(
+				List<ValdacUserDataDto> AllDatalist) {
+			Map<String, ValdacUserDataDto> map = new HashMap<String, ValdacUserDataDto>();
+			for (ValdacUserDataDto userData : AllDatalist) {
+				if (StringUtil.isNotEmpty(userData.id)) {
+					map.put(userData.kikiIDOld, userData);
+				}
+			}
+			return map;
+		}
+
+		/**
+		 *
+		 * 工事旧IDをKey
+		 *
+		 * */
+			public static Map<String, ValdacUserDataDto> getallKoujiDataListMap(
+					List<ValdacUserDataDto> AllDatalist) {
+				Map<String, ValdacUserDataDto> map = new HashMap<String, ValdacUserDataDto>();
+				for (ValdacUserDataDto userData : AllDatalist) {
+					if (StringUtil.isNotEmpty(userData.id)) {
+						map.put(userData.koujiIDOld, userData);
+					}
+				}
+				return map;
+			}
 
 }

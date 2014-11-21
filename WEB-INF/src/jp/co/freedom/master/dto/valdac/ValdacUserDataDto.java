@@ -12,6 +12,9 @@ import jp.co.freedom.master.dto.UserDataDto;
  */
 public class ValdacUserDataDto extends UserDataDto {
 
+	/** 機器システムID */
+	public String KikiSysId;
+
 	/** 旧機器システムID */
 	public String KikiSysIdOld;
 
@@ -26,6 +29,12 @@ public class ValdacUserDataDto extends UserDataDto {
 
 	/** 機器ID */
 	public String buhinIDOld;
+
+	/** 工事ID */
+	public String koujiID;
+
+	/** 工事ID */
+	public String koujiIDOld;
 
 	/** 機器ID */
 	public Map<String,ValdacBuhiDto> kikiList;

@@ -77,6 +77,8 @@ public class InsertIntoTable extends HttpServlet {
 				ValdacUtilites.importDataKiki(conn, csvData,tablename); // 機器テーブル
 			}else if("buhin".equals(tablename)){
 				ValdacUtilites.importDataBuhi(conn, csvData,tablename); // 部品テーブル
+			}else if("kouji".equals(tablename)){
+				ValdacUtilites.importDataKouji(conn, csvData,tablename); // 部品テーブル
 			}
 
 

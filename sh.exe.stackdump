@@ -1,10 +1,10 @@
 MSYS-1.0.12 Build:2011-07-20 17:52
 Exception: STATUS_ACCESS_VIOLATION at eip=6801364A
-eax=0027FFF8 ebx=0027FFF8 ecx=75F81601 edx=00000001 esi=0028FC50 edi=0028F850
+eax=0027FFF8 ebx=0027FFF8 ecx=77651601 edx=00000001 esi=0028FC50 edi=0028F850
 ebp=0028F6C0 esp=0028F6A8 program=C:\Users\維瑞\AppData\Local\Atlassian\SourceTree\git_local\bin\sh.exe
 cs=0023 ds=002B es=002B fs=0053 gs=002B ss=002B
 Stack trace:
 Frame     Function  Args
 0028F6C0  6801364A  (0027FFF8, 00000000, 00110000, 00000000)
- 162748 [main] sh 5796 handle_exceptions: Exception: STATUS_ACCESS_VIOLATION
- 172496 [main] sh 5796 handle_exceptions: Error while dumping state (probably corrupted stack)
+ 131035 [main] sh 6780 handle_exceptions: Exception: STATUS_ACCESS_VIOLATION
+ 140783 [main] sh 6780 handle_exceptions: Error while dumping state (probably corrupted stack)

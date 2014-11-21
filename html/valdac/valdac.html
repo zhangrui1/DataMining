@@ -114,6 +114,7 @@ th.specalt {
 								<option value="kikisys">kikisys</option>
 								<option value="kiki">kiki</option>
 								<option value="buhin">buhin</option>
+								<option value="kouji">kouji</option>
 							</select>
 						</div>
 						<div>
@@ -128,6 +129,29 @@ th.specalt {
 					<form id="form1_1" name="form1_1"
 						action="/DataMining/NewRelationTable"
 						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
+						<tr>
+				<td class="alt"><div>工事、機器システム、点検機器の対応関係作成</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/NewKoujiRelationTable"
+						enctype="multipart/form-data" method="post">
+												<div>
+							<small>顧客コード</small>
+							 <select name="KCode">
+								<option value="10101">10101</option>
+								<option value="10102">10102</option>
+								<option value="10103">10103</option>
+								<option value="10104-1">10104-1</option>
+								<option value="10104-2">10104-2</option>
+								<option value="10105">10105</option>
+							</select>
+						</div>
 						<div>
 							<input type="submit" value="作成" />
 						</div>
