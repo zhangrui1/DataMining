@@ -747,6 +747,18 @@ public class ValdacUtilites {
 					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
 					cols.add(StringUtil.enquote(userdata.kikiID));
 					cols.add(StringUtil.enquote(userdata.kikiIDOld));
+
+//					cols.add(StringUtil.enquote(userdata.tenkenSisin));
+//					cols.add(StringUtil.enquote(userdata.tenkenRank));
+//					cols.add(StringUtil.enquote(userdata.tenkenNaiyo));
+//					cols.add(StringUtil.enquote(userdata.gyosya));
+//					cols.add(StringUtil.enquote(userdata.tenkenKekka0));
+//					cols.add(StringUtil.enquote(userdata.tenkenKekka1));
+//					cols.add(StringUtil.enquote(userdata.tenkenKekka2));
+//					cols.add(StringUtil.enquote(userdata.tenkenKekka3));
+//					cols.add(StringUtil.enquote(userdata.tenkenKekka4));
+//					cols.add(StringUtil.enquote(userdata.tenkenKekka5));
+
 					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
 				}
 			}
@@ -1128,6 +1140,18 @@ public class ValdacUtilites {
 			userdata.KikiSysIdOld = Kikisys;
 			// kiki旧ID
 			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+//			//点検結果部分
+//			userdata.tenkenSisin=rs.getString("k04TenkenSisin");
+//			userdata.tenkenRank=rs.getString("k04TenkenRank");
+//			userdata.tenkenNaiyo=rs.getString("k04TenkenNaiyo");
+//			userdata.gyosya=rs.getString("k04Gyosya");
+//			userdata.tenkenKekka0=rs.getString("k04Mae0Nen");
+//			userdata.tenkenKekka1=rs.getString("k04Mae1Nen");
+//			userdata.tenkenKekka2=rs.getString("k04Mae2Nen");
+//			userdata.tenkenKekka3=rs.getString("k04Mae3Nen");
+//			userdata.tenkenKekka4=rs.getString("k04Mae4Nen");
+//			userdata.tenkenKekka5=rs.getString("k04Mae5Nen");
 
 			userDataList.add(userdata);
 		}
