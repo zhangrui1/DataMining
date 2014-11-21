@@ -38,16 +38,19 @@ public class ValdacUserDataDto  {
 	public String koujiIDOld;
 
 //	/** 点検機器用 */
-//	public String tenkenSisin;
-//	public String tenkenRank;
-//	public String tenkenNaiyo;
-//	public String gyosya;
-//	public String tenkenKekka0;
-//	public String tenkenKekka1;
-//	public String tenkenKekka2;
-//	public String tenkenKekka3;
-//	public String tenkenKekka4;
-//	public String tenkenKekka5;
+	public String tenkenSisin;
+	public String tenkenRank;
+	public String tenkenNaiyo;
+	public String gyosya;
+	public String tenkenKekka0;
+	public String tenkenKekka1;
+	public String tenkenKekka2;
+	public String tenkenKekka3;
+	public String tenkenKekka4;
+	public String tenkenKekka5;
+
+	public String KanryoFlg;
+	public String tenkenNendo;
 
 
 	/** 機器ID */

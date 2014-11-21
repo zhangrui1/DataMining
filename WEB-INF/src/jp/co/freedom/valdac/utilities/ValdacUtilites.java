@@ -730,6 +730,19 @@ public class ValdacUtilites {
 		header.add(StringUtil.enquote("kikiid"));
 		header.add(StringUtil.enquote("kikiidOld"));
 
+		header.add(StringUtil.enquote("tenkenSisin"));
+		header.add(StringUtil.enquote("tenkenRank"));
+		header.add(StringUtil.enquote("tenkenNaiyo"));
+		header.add(StringUtil.enquote("gyosya"));
+		header.add(StringUtil.enquote("tenkenKekka0"));
+		header.add(StringUtil.enquote("tenkenKekka1"));
+		header.add(StringUtil.enquote("tenkenKekka2"));
+		header.add(StringUtil.enquote("tenkenKekka3"));
+		header.add(StringUtil.enquote("tenkenKekka4"));
+		header.add(StringUtil.enquote("tenkenKekka5"));
+		header.add(StringUtil.enquote("tenkenNendo"));
+		header.add(StringUtil.enquote("KanryoFlg"));
+
 		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
 
 		// 対応関係テーブルの新ID
@@ -748,16 +761,19 @@ public class ValdacUtilites {
 					cols.add(StringUtil.enquote(userdata.kikiID));
 					cols.add(StringUtil.enquote(userdata.kikiIDOld));
 
-//					cols.add(StringUtil.enquote(userdata.tenkenSisin));
-//					cols.add(StringUtil.enquote(userdata.tenkenRank));
-//					cols.add(StringUtil.enquote(userdata.tenkenNaiyo));
-//					cols.add(StringUtil.enquote(userdata.gyosya));
-//					cols.add(StringUtil.enquote(userdata.tenkenKekka0));
-//					cols.add(StringUtil.enquote(userdata.tenkenKekka1));
-//					cols.add(StringUtil.enquote(userdata.tenkenKekka2));
-//					cols.add(StringUtil.enquote(userdata.tenkenKekka3));
-//					cols.add(StringUtil.enquote(userdata.tenkenKekka4));
-//					cols.add(StringUtil.enquote(userdata.tenkenKekka5));
+					cols.add(StringUtil.enquote(userdata.tenkenSisin));
+					cols.add(StringUtil.enquote(userdata.tenkenRank));
+					cols.add(StringUtil.enquote(userdata.tenkenNaiyo));
+					cols.add(StringUtil.enquote(userdata.gyosya));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka0));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka1));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka2));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka3));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka4));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka5));
+
+					cols.add(StringUtil.enquote(userdata.tenkenNendo));
+					cols.add(StringUtil.enquote(userdata.KanryoFlg));
 
 					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
 				}
@@ -1201,16 +1217,12 @@ public class ValdacUtilites {
 			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
 
 //			//点検結果部分
-//			userdata.tenkenSisin=rs.getString("k04TenkenSisin");
-//			userdata.tenkenRank=rs.getString("k04TenkenRank");
-//			userdata.tenkenNaiyo=rs.getString("k04TenkenNaiyo");
-//			userdata.gyosya=rs.getString("k04Gyosya");
-//			userdata.tenkenKekka0=rs.getString("k04Mae0Nen");
-//			userdata.tenkenKekka1=rs.getString("k04Mae1Nen");
-//			userdata.tenkenKekka2=rs.getString("k04Mae2Nen");
-//			userdata.tenkenKekka3=rs.getString("k04Mae3Nen");
-//			userdata.tenkenKekka4=rs.getString("k04Mae4Nen");
-//			userdata.tenkenKekka5=rs.getString("k04Mae5Nen");
+
+			userdata.tenkenRank=rs.getString("k05TenkenRank");
+			userdata.tenkenNaiyo=rs.getString("k05Naiyo");
+			userdata.tenkenKekka0=rs.getString("k05Kekka");
+            userdata.tenkenNendo=rs.getString("k05TenkenNendo");
+            userdata.KanryoFlg=rs.getString("k05KanryoFlg");
 
 			userDataList.add(userdata);
 		}
