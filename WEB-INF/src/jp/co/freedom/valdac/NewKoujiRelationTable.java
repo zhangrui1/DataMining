@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,13 @@ public class NewKoujiRelationTable extends HttpServlet {
 		Object KCodeObj = request.getParameter("KCode");
 		String TableName = (String) KCodeObj;
 		assert StringUtil.isNotEmpty(TableName);
+
+
+		Object mode = request.getParameter("mode");
+		String ModeName = (String) mode;
+		assert StringUtil.isNotEmpty(ModeName);
+
+
 		Connection conn = null;
 		try {
 			// JDBCドライバーのロード
@@ -71,6 +79,10 @@ public class NewKoujiRelationTable extends HttpServlet {
 
 			// 4.工事点検機器の全データ
 
+			// 工事履歴の 工事IDがないデータMap
+			List<ValdacUserDataDto> allNoMatchKoujiRirekiDataList = new ArrayList<ValdacUserDataDto>();
+
+
 			Map<String, List<ValdacUserDataDto>> allKoujiKikiData = new HashMap<String, List<ValdacUserDataDto>>();
 			int mapSize = ValdacUtilites.KCORD_MAP.size();
 			for (int nIndex = 1; nIndex <= ValdacUtilites.KCORD_MAP.size(); nIndex++) {
@@ -88,7 +100,7 @@ public class NewKoujiRelationTable extends HttpServlet {
 					if (tmKoujiData != null) {
 						userData.koujiID = tmKoujiData.koujiID;
 					} else {
-						System.out.println("該工事ID：" + userData.koujiIDOld);
+//						System.out.println("該工事ID：" + userData.koujiIDOld);
 					}
 
 					// 機器システムIDである場合
@@ -97,8 +109,8 @@ public class NewKoujiRelationTable extends HttpServlet {
 					if (tmKikisysData != null) {
 						userData.KikiSysId = tmKikisysData.KikiSysId;
 					} else {
-						System.out
-								.println("該機器システムID：" + userData.KikiSysIdOld);
+//						System.out
+//								.println("該機器システムID：" + userData.KikiSysIdOld);
 					}
 
 					// 機器である場合
@@ -107,18 +119,40 @@ public class NewKoujiRelationTable extends HttpServlet {
 					if (tmKikiData != null) {
 						userData.kikiID = tmKikiData.kikiID;
 					} else {
-						System.out.println("該機器ID：" + userData.kikiIDOld);
+//						System.out.println("該機器ID：" + userData.kikiIDOld);
+					}
+
+					// 工事ID、弁ID、機器IDのいずれが空である場合
+					if((userData.koujiID==null) ||(userData.KikiSysId==null) || (userData.kikiID==null) ){
+						allNoMatchKoujiRirekiDataList.add(userData);
 					}
 				}
 
 				allKoujiKikiData.put(KCodename1,
 						allKoujiKikiDataList);
+
+
 			}
-			if (!ValdacUtilites.downLoadKoujiRealation2(request, response,
-					ValdacConfig.OUTPUT_FILENAME_RELATION, allKoujiKikiData,
-					ValdacConfig.DELIMITER)) {
-				System.out.println("Error: Failed download CSV file");
+//			if (!ValdacUtilites.downLoadKoujiRealation2(request, response,
+//					ValdacConfig.OUTPUT_FILENAME_RELATION, allKoujiKikiData,
+//					ValdacConfig.DELIMITER)) {
+//				System.out.println("Error: Failed download CSV file");
+//			}
+
+			if ("match".equals(ModeName)){
+				if (!ValdacUtilites.downLoadKoujiRealation2(request, response,
+						ValdacConfig.OUTPUT_TENKENKIKI, allKoujiKikiData,
+						ValdacConfig.DELIMITER)) {
+					System.out.println("Error: Failed download CSV file");
+				}
+			}else {
+				if (!ValdacUtilites.downLoadTenkenRireki(request, response,
+						ValdacConfig.OUTPUT_TENKENKIKI_NO, allNoMatchKoujiRirekiDataList,
+						ValdacConfig.DELIMITER)) {
+					System.out.println("Error: Failed download CSV file");
+				}
 			}
+
 
 			// List<ValdacUserDataDto> allKoujiKikiDataList = ValdacUtilites
 			// .getKoujiKikiIdData(conn,KCodename);

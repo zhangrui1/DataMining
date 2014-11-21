@@ -40,8 +40,9 @@ public class ValdacUtilites {
 		map.put("1", "10101");
 		map.put("2", "10102");
 		map.put("3", "10103");
-		map.put("4", "10104");
-		map.put("5", "10105");
+//		map.put("4", "10104");
+		map.put("4", "10105");
+
 		return map;
 	}
 
@@ -1268,7 +1269,7 @@ public class ValdacUtilites {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public static List<ValdacUserDataDto> getTenkenRirekiIdData(Connection conn,String KCodename)
+	public static List<ValdacUserDataDto> getTenkenRirekiIdData(Connection conn)
 			throws SQLException, IOException {
 
 		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();

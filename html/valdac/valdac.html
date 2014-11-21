@@ -146,6 +146,11 @@ th.specalt {
 							 <select name="KCode">
 								<option value="k04">点検機器</option>
 							</select>
+							<small>DLデータ</small>
+							 <select name="mode">
+								<option value="match">変換できた</option>
+								<option value="unmatch">変換できない</option>
+							</select>
 						</div>
 						<div>
 							<input type="submit" value="作成" />
@@ -159,6 +164,13 @@ th.specalt {
 					<form id="form1_1" name="form1_1"
 						action="/DataMining/NewTenkenRireki"
 						enctype="multipart/form-data" method="post">
+						<div>
+							<small>DLデータ</small>
+							 <select name="mode">
+								<option value="match">変換できた</option>
+								<option value="unmatch">変換できない</option>
+							</select>
+
 						<div>
 							<input type="submit" value="作成" />
 						</div>
