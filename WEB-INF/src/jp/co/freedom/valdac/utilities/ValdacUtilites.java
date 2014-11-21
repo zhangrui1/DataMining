@@ -788,6 +788,86 @@ public class ValdacUtilites {
 		}
 		return true;
 	}
+
+	public static boolean downLoadTenkenRireki(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			 List<ValdacUserDataDto> userDataList, String dim) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定する
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(StringUtil.enquote("kouji"));
+		header.add(StringUtil.enquote("koujiOld"));
+		header.add(StringUtil.enquote("kikisysid"));
+		header.add(StringUtil.enquote("kikisysidOld"));
+		header.add(StringUtil.enquote("kikiid"));
+		header.add(StringUtil.enquote("kikiidOld"));
+
+		header.add(StringUtil.enquote("tenkenSisin"));
+		header.add(StringUtil.enquote("tenkenRank"));
+		header.add(StringUtil.enquote("tenkenNaiyo"));
+		header.add(StringUtil.enquote("gyosya"));
+		header.add(StringUtil.enquote("tenkenKekka0"));
+		header.add(StringUtil.enquote("tenkenKekka1"));
+		header.add(StringUtil.enquote("tenkenKekka2"));
+		header.add(StringUtil.enquote("tenkenKekka3"));
+		header.add(StringUtil.enquote("tenkenKekka4"));
+		header.add(StringUtil.enquote("tenkenKekka5"));
+		header.add(StringUtil.enquote("tenkenNendo"));
+		header.add(StringUtil.enquote("KanryoFlg"));
+
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		// 対応関係テーブルの新ID
+		int count = 1;
+			if (userDataList!=null){
+				for (ValdacUserDataDto userdata : userDataList) {
+					List<String> cols = new ArrayList<String>();
+					cols.add(String.valueOf(count++));
+	//				cols.add(StringUtil.enquote(userdata.id));
+					cols.add(StringUtil.enquote(userdata.koujiID));
+					cols.add(StringUtil.enquote(userdata.koujiIDOld));
+					cols.add(StringUtil.enquote(userdata.KikiSysId));
+					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
+					cols.add(StringUtil.enquote(userdata.kikiID));
+					cols.add(StringUtil.enquote(userdata.kikiIDOld));
+
+					cols.add(StringUtil.enquote(userdata.tenkenSisin));
+					cols.add(StringUtil.enquote(userdata.tenkenRank));
+					cols.add(StringUtil.enquote(userdata.tenkenNaiyo));
+					cols.add(StringUtil.enquote(userdata.gyosya));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka0));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka1));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka2));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka3));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka4));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka5));
+
+					cols.add(StringUtil.enquote(userdata.tenkenNendo));
+					cols.add(StringUtil.enquote(userdata.KanryoFlg));
+
+					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+				}
+			}
+
+
+		try {
+			writer.close();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 	/**
 	 * DBの初期化
 	 *
@@ -1192,7 +1272,7 @@ public class ValdacUtilites {
 			throws SQLException, IOException {
 
 		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
-		String sql="SELECT * FROM k05TenkenRireki ;";
+		String sql="SELECT * FROM k05Tenkenrireki ;";
 
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery(sql);

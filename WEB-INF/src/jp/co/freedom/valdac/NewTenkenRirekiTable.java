@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +22,9 @@ import jp.co.freedom.valdac.utilities.ValdacUtilites;
 /**
  *
  */
-@WebServlet(name = "NewKoujiRelationTable", urlPatterns = { "/NewKoujiRelationTable" })
+@WebServlet(name = "NewTenkenRireki", urlPatterns = { "/NewTenkenRireki" })
 @MultipartConfig(fileSizeThreshold = 5000000, maxFileSize = 10000000)
-public class NewKoujiRelationTable extends HttpServlet {
+public class NewTenkenRirekiTable extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -69,18 +68,12 @@ public class NewKoujiRelationTable extends HttpServlet {
 			Map<String, ValdacUserDataDto> allKoujiDataListMap = ValdacUtilites
 					.getallKoujiDataListMap(allKoujiDataList);
 
-			// 4.工事点検機器の全データ
 
-			Map<String, List<ValdacUserDataDto>> allKoujiKikiData = new HashMap<String, List<ValdacUserDataDto>>();
-			int mapSize = ValdacUtilites.KCORD_MAP.size();
-			for (int nIndex = 1; nIndex <= ValdacUtilites.KCORD_MAP.size(); nIndex++) {
-				String KCodename1 = ValdacUtilites.KCORD_MAP.get(String
-						.valueOf(nIndex));
-				List<ValdacUserDataDto>	 allKoujiKikiDataList = ValdacUtilites
-							.getKoujiKikiIdData(conn, KCodename1, request,
-									 response);
+			// 工事履歴の全データMap
+			List<ValdacUserDataDto> allKoujiRirekiDataList = ValdacUtilites
+							.getTenkenRirekiIdData(conn, TableName);
 
-				for (ValdacUserDataDto userData : allKoujiKikiDataList) {
+				for (ValdacUserDataDto userData : allKoujiRirekiDataList) {
 
 					// 工事である場合
 					ValdacUserDataDto tmKoujiData = allKoujiDataListMap
@@ -111,60 +104,12 @@ public class NewKoujiRelationTable extends HttpServlet {
 					}
 				}
 
-				allKoujiKikiData.put(KCodename1,
-						allKoujiKikiDataList);
-			}
-			if (!ValdacUtilites.downLoadKoujiRealation2(request, response,
-					ValdacConfig.OUTPUT_FILENAME_RELATION, allKoujiKikiData,
+
+			if (!ValdacUtilites.downLoadTenkenRireki(request, response,
+					ValdacConfig.OUTPUT_TENKENRIREKI, allKoujiRirekiDataList,
 					ValdacConfig.DELIMITER)) {
 				System.out.println("Error: Failed download CSV file");
 			}
-
-			// List<ValdacUserDataDto> allKoujiKikiDataList = ValdacUtilites
-			// .getKoujiKikiIdData(conn,KCodename);
-
-			// 機器システムテーブルから
-
-			// for (ValdacUserDataDto userData : allKoujiKikiData) {
-			//
-			// // 工事である場合
-			// ValdacUserDataDto tmKoujiData = allKoujiDataListMap
-			// .get(userData.koujiIDOld);
-			// if (tmKoujiData != null) {
-			// userData.koujiID = tmKoujiData.koujiID;
-			// } else {
-			// System.out
-			// .println("該工事ID：" + userData.koujiIDOld);
-			// }
-			//
-			// // 機器システムIDである場合
-			// ValdacUserDataDto tmKikisysData = allKikiSysIdDataMap
-			// .get(userData.KikiSysIdOld);
-			// if (tmKikisysData != null) {
-			// userData.KikiSysId = tmKikisysData.KikiSysId;
-			// } else {
-			// System.out
-			// .println("該機器システムID：" + userData.KikiSysIdOld);
-			// }
-			//
-			// // 機器である場合
-			// ValdacUserDataDto tmKikiData = allKikiDataMap
-			// .get(userData.kikiIDOld);
-			// if (tmKikiData != null) {
-			// userData.kikiID = tmKikiData.kikiID;
-			// } else {
-			// System.out
-			// .println("該機器ID：" + userData.kikiIDOld);
-			// }
-			// }
-
-			// マッチングデータのダウンロード.
-			// if (!ValdacUtilites.downLoadKoujiRealation(request, response,
-			// ValdacConfig.OUTPUT_FILENAME_RELATION, allKoujiKikiDataList,
-			// Config.DELIMITER_TAB)) {
-			// System.out.println("Error: Failed download CSV file");
-			// }
-
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

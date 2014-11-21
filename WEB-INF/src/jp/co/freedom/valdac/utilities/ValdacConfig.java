@@ -30,6 +30,14 @@ public class ValdacConfig {
 	public static final String OUTPUT_FILENAME = "東洋バルブ.txt";
 	/** 東洋バルブID対応関係 */
 	public static final String OUTPUT_FILENAME_RELATION = "東洋バルブID対応関係.txt";
+
+	/** 東洋バルブ点検履歴*/
+	public static final String OUTPUT_TENKENRIREKI = "東洋バルブ点検履歴変換後.txt";
+
+	/** 東洋バルブ点検履歴機器*/
+	public static final String OUTPUT_TENKENKIKI = "東洋バルブ点検機器変換後.txt";
+
+
 	public static boolean ENQUOTE_BY_DOUBLE_QUOTATION = false;
 	/** 最初の行がヘッダー行であるか否かのブール値 */
 	public static boolean REMOVE_HEADER_RECORD = false;

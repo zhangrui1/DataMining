@@ -135,7 +135,7 @@ th.specalt {
 					</form>
 				</td>
 			</tr>
-						<tr>
+			<tr>
 				<td class="alt"><div>工事、機器システム、点検機器の対応関係作成</div> <br /></td>
 				<td>
 					<form id="form1_1" name="form1_1"
@@ -145,9 +145,20 @@ th.specalt {
 							<small>顧客コード</small>
 							 <select name="KCode">
 								<option value="k04">点検機器</option>
-								<option value="k05">点検履歴</option>
 							</select>
 						</div>
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
+									<tr>
+				<td class="alt"><div>点検機器履歴作成</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/NewTenkenRireki"
+						enctype="multipart/form-data" method="post">
 						<div>
 							<input type="submit" value="作成" />
 						</div>
