@@ -77,7 +77,7 @@ public class NewRelationTable extends HttpServlet {
 
 							String BuhinIdOld= buhiDataList.id;
 							String tempBuhinIdOld = BuhinIdOld.substring(0,
-									BuhinIdOld.length() - 2);
+									BuhinIdOld.length() - 3);
 							if (tempBuhinIdOld.equals(KikiIdOld)){
 //								buhinId.buhinIDList.add(BuhinIdOld);
 								buhinId.buhinIDList.add(buhiDataList.buhinID);

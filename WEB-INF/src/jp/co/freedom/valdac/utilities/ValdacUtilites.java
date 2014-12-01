@@ -33,7 +33,7 @@ public class ValdacUtilites {
 
 	private static Object mTable;
 
-	/** 都道府県コード */
+	/**会社コード */
 	public static Map<String, String> KCORD_MAP = createKcordMap();
 	private static Map<String, String> createKcordMap() {
 		Map<String, String> map = new HashMap<String, String>();
@@ -43,6 +43,18 @@ public class ValdacUtilites {
 //		map.put("4", "10104");
 		map.put("4", "10105");
 
+		return map;
+	}
+
+	/**会社コード */
+	public static Map<String, String> KCORD_MAP_2 = createKcord2Map();
+	private static Map<String, String> createKcord2Map() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("1", "1");
+		map.put("2", "100000");
+		map.put("3", "200000");
+		map.put("4", "300000");
+		map.put("5", "400000");
 		return map;
 	}
 
@@ -790,6 +802,89 @@ public class ValdacUtilites {
 		return true;
 	}
 
+	public static boolean downLoadTestKoujiRealation2(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			Map<String, List<ValdacUserDataDto>> userDataList, String dim,int startnIndex ) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定するstartnIndex
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(StringUtil.enquote("kouji"));
+		header.add(StringUtil.enquote("koujiOld"));
+		header.add(StringUtil.enquote("kikisysid"));
+		header.add(StringUtil.enquote("kikisysidOld"));
+		header.add(StringUtil.enquote("kikiid"));
+		header.add(StringUtil.enquote("kikiidOld"));
+
+		header.add(StringUtil.enquote("tenkenSisin"));
+		header.add(StringUtil.enquote("tenkenRank"));
+		header.add(StringUtil.enquote("tenkenNaiyo"));
+		header.add(StringUtil.enquote("gyosya"));
+		header.add(StringUtil.enquote("tenkenKekka0"));
+		header.add(StringUtil.enquote("tenkenKekka1"));
+		header.add(StringUtil.enquote("tenkenKekka2"));
+		header.add(StringUtil.enquote("tenkenKekka3"));
+		header.add(StringUtil.enquote("tenkenKekka4"));
+		header.add(StringUtil.enquote("tenkenKekka5"));
+		header.add(StringUtil.enquote("tenkenNendo"));
+		header.add(StringUtil.enquote("KanryoFlg"));
+
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		// 対応関係テーブルの新IDInteger.toString(nIndex)
+		int count = 1;
+		for(int nIndex=startnIndex;nIndex<startnIndex+20;nIndex++){
+			List<ValdacUserDataDto> allKoujiKikiDataList = userDataList.get(String.valueOf(nIndex));
+			if (allKoujiKikiDataList!=null){
+				for (ValdacUserDataDto userdata : allKoujiKikiDataList) {
+					List<String> cols = new ArrayList<String>();
+//					cols.add(String.valueOf(count++));
+					cols.add(StringUtil.enquote(userdata.id));
+					cols.add(StringUtil.enquote(userdata.koujiID));
+					cols.add(StringUtil.enquote(userdata.koujiIDOld));
+					cols.add(StringUtil.enquote(userdata.KikiSysId));
+					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
+					cols.add(StringUtil.enquote(userdata.kikiID));
+					cols.add(StringUtil.enquote(userdata.kikiIDOld));
+
+					cols.add(StringUtil.enquote(userdata.tenkenSisin));
+					cols.add(StringUtil.enquote(userdata.tenkenRank));
+					cols.add(StringUtil.enquote(userdata.tenkenNaiyo));
+					cols.add(StringUtil.enquote(userdata.gyosya));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka0));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka1));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka2));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka3));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka4));
+					cols.add(StringUtil.enquote(userdata.tenkenKekka5));
+
+					cols.add(StringUtil.enquote(userdata.tenkenNendo));
+					cols.add(StringUtil.enquote(userdata.KanryoFlg));
+
+					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+				}
+			}
+
+		}
+
+		try {
+			writer.close();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
 	public static boolean downLoadTenkenRireki(HttpServletRequest request,
 			HttpServletResponse response, String outputFileName,
 			 List<ValdacUserDataDto> userDataList, String dim) throws IOException {
@@ -912,10 +1007,10 @@ public class ValdacUtilites {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
 			ps.setInt(++position, count++);
-			for (int nIndex =2; nIndex <= 5; nIndex++) {
+			for (int nIndex =2; nIndex <= 6; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
-			for (int nIndex = 12; nIndex <= 30; nIndex++) {
+			for (int nIndex = 13; nIndex <= 30; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
 			for (int nIndex = 32; nIndex <= 35; nIndex++) {
@@ -1217,6 +1312,7 @@ public class ValdacUtilites {
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery(sql);
 		int count=1;
+
 		while (rs.next()) {
 			count=count+1;
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
@@ -1247,6 +1343,75 @@ public class ValdacUtilites {
 //			userdata.tenkenKekka3=rs.getString("k04Mae3Nen");
 //			userdata.tenkenKekka4=rs.getString("k04Mae4Nen");
 //			userdata.tenkenKekka5=rs.getString("k04Mae5Nen");
+
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
+	/**
+	 * 工事の点検機器
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> getKoujiKikiIdDataForStep(Connection conn,int nIndex)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+
+		int start=nIndex*10000;
+		int end=(nIndex+1)*10000;
+
+		String sql= "SELECT * FROM k04tenkenkiki where id >= "+ start + " and id<" + end+" order by id;";
+
+
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=0;
+
+		while (rs.next()) {
+
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+			String KCode=StringUtil.convertFixedLengthData(rs.getString("k04KCode"),6,"0");
+//			String KCode=StringUtil.concatWithDelimit("", "0",rs.getString("k04KCode"));
+			String KjSeq=StringUtil.convertFixedLengthData(rs.getString("k04KjSeq"),3,"0");
+			String Kikisys=StringUtil.convertFixedLengthData(rs.getString("k04KikiSysId"),11,"0");
+//			String Kikisys=StringUtil.concatWithDelimit("", "0",rs.getString("k04KikiSysId"));
+			String KikiBunrui=rs.getString("k04KikiBunrui");
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k04KikiBunruiSeq"),2,"0");
+
+//			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+//            userdata.id=Integer.toString(count);
+			 userdata.id=rs.getString("id");
+			// 工事旧ID
+			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+			//点検結果部分
+			userdata.tenkenSisin=toBigJp(rs.getString("k04TenkenSisin"));
+			userdata.tenkenRank=toBigJp(rs.getString("k04TenkenRank"));
+			userdata.tenkenNaiyo=toBigJp(rs.getString("k04TenkenNaiyo"));
+			userdata.gyosya=toBigJp(rs.getString("k04Gyosya"));
+			userdata.tenkenKekka0=toBigJp(rs.getString("k04Mae0Nen"));
+			userdata.tenkenKekka1=toBigJp(rs.getString("k04Mae1Nen"));
+			userdata.tenkenKekka2=toBigJp(rs.getString("k04Mae2Nen"));
+			userdata.tenkenKekka3=toBigJp(rs.getString("k04Mae3Nen"));
+			userdata.tenkenKekka4=toBigJp(rs.getString("k04Mae4Nen"));
+			userdata.tenkenKekka5=toBigJp(rs.getString("k04Mae5Nen"));
 
 			userDataList.add(userdata);
 		}
@@ -1336,22 +1501,35 @@ public class ValdacUtilites {
 			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
 
 			// 機器Key
+//			userdata.buhinIDOld = StringUtil.concatWithDelimit("",
+//					"0",
+//					rs.getString("kikiSysIdOld"),
+//					rs.getString("kikiBunrui"),
+//					"0",
+//					rs.getString("kikiBunruiSeq"),
+//					rs.getString("buhinKbn"),
+//					rs.getString("buhinSeq"));
+//			userdata.id = StringUtil.concatWithDelimit("",
+//					"0",
+//					rs.getString("kikiSysIdOld"),
+//					rs.getString("kikiBunrui"),
+//					"0",
+//					rs.getString("kikiBunruiSeq"),
+//					rs.getString("buhinKbn"),
+//					rs.getString("buhinSeq"));
 			userdata.buhinIDOld = StringUtil.concatWithDelimit("",
-					"0",
 					rs.getString("kikiSysIdOld"),
 					rs.getString("kikiBunrui"),
-					"0",
 					rs.getString("kikiBunruiSeq"),
 					rs.getString("buhinKbn"),
 					rs.getString("buhinSeq"));
 			userdata.id = StringUtil.concatWithDelimit("",
-					"0",
 					rs.getString("kikiSysIdOld"),
 					rs.getString("kikiBunrui"),
-					"0",
 					rs.getString("kikiBunruiSeq"),
 					rs.getString("buhinKbn"),
 					rs.getString("buhinSeq"));
+
 			// 機器ID番号
 			userdata.buhinID = rs.getString("buhinId");
 

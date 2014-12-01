@@ -158,6 +158,39 @@ th.specalt {
 					</form>
 				</td>
 			</tr>
+			<tr>
+				<td class="alt"><div>分割りで点検機器の対応関係作成　本番　本番</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/Test2NewKoujiRelationTable"
+						enctype="multipart/form-data" method="post">
+												<div>
+						<small>DLデータ</small>
+							 <select name="mode">
+								<option value="match">変換できた</option>
+								<option value="unmatch">変換できない</option>
+							</select>
+							<small>顧客コード</small>
+							 <select name="Start">
+								<option value="0">0~20万</option>
+								<option value="20">20万-40万</option>
+								<option value="40">40万-60万</option>
+								<option value="60">60万-80万</option>
+								<option value="80">80万-100万</option>
+								<option value="100">100万-120万</option>
+								<option value="120">120万-140万</option>
+								<option value="140">140万-160万</option>
+								<option value="160">160万-180万</option>
+								<option value="180">180万-200万</option>
+							</select>
+							<small>DLデータ</small>
+						</div>
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
 									<tr>
 				<td class="alt"><div>点検機器履歴作成</div> <br /></td>
 				<td>
