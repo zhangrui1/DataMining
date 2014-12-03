@@ -77,6 +77,16 @@ public class ValdacUserDataDto  {
 	public String imagebiko;
 	public String tosyoMei;
 
+//顧客部分
+	public String kCode;
+	public String kName;
+	public String kNameNew;
+	public String kCodeL;
+	public String kCodeLKanji;
+	public String kCodeM;
+	public String kCodeMKanji;
+	public String kCodeS;
+	public String kCodeSKanji;
 	/** 機器ID */
 	public Map<String,ValdacBuhiDto> kikiList;
 

@@ -6,5 +6,5 @@ cs=0023 ds=002B es=002B fs=0053 gs=002B ss=002B
 Stack trace:
 Frame     Function  Args
 0028F6C0  6801364A  (0027FFF8, 00000000, 00110000, 00000000)
- 179403 [main] sh 8924 handle_exceptions: Exception: STATUS_ACCESS_VIOLATION
- 189035 [main] sh 8924 handle_exceptions: Error while dumping state (probably corrupted stack)
+ 124757 [main] sh 364 handle_exceptions: Exception: STATUS_ACCESS_VIOLATION
+ 139854 [main] sh 364 handle_exceptions: Error while dumping state (probably corrupted stack)

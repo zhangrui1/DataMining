@@ -1148,6 +1148,68 @@ public class ValdacUtilites {
 				}
 		return true;
 	}
+
+	/**
+	 *顧客先ダウンロード
+	 *
+	 * */
+	public static boolean downLoadKokyaku(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			 List<ValdacUserDataDto> userDataList, String dim) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定する
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(String.valueOf("kCode"));
+		header.add(StringUtil.enquote("kCodeL"));
+		header.add(StringUtil.enquote("kCodeM"));
+		header.add(StringUtil.enquote("kCodeS"));
+		header.add(StringUtil.enquote("kCodeLKanji"));
+		header.add(StringUtil.enquote("kCodeMKanji"));
+		header.add(StringUtil.enquote("kCodeSKanji"));
+		header.add(StringUtil.enquote("kCodeKanji"));
+		header.add(StringUtil.enquote("end"));
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		// 対応関係テーブルの新ID
+		int count = 1;
+			if (userDataList!=null){
+				for (ValdacUserDataDto userdata : userDataList) {
+					List<String> cols = new ArrayList<String>();
+					cols.add(String.valueOf(count++));
+					cols.add(StringUtil.enquote(userdata.id));
+					cols.add(StringUtil.enquote(userdata.kCodeL));
+					cols.add(StringUtil.enquote(userdata.kCodeM));
+					cols.add(StringUtil.enquote(userdata.kCodeS));
+
+
+					cols.add(StringUtil.enquote(userdata.kCodeLKanji));
+					cols.add(StringUtil.enquote(userdata.kCodeMKanji));
+					cols.add(StringUtil.enquote(userdata.kCodeSKanji));
+					cols.add(StringUtil.concatWithDelimit(" ",userdata.kCodeLKanji,userdata.kCodeMKanji,userdata.kCodeSKanji));
+					cols.add(StringUtil.enquote("end"));
+
+
+					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+				}
+			}
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return false;
+				}
+		return true;
+	}
 	/**
 	 * DBの初期化
 	 *
@@ -1429,6 +1491,44 @@ public class ValdacUtilites {
 					rs.getString("kikiSysSeq"));
 			userDataList.add(userdata);
 		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
+	/**
+	 * 顧客データを取得
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 */
+	public static List<ValdacUserDataDto> getKokyakuData(Connection conn)
+			throws SQLException {
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql = "SELECT * FROM x01kokyaku;";
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=1;
+		while (rs.next()) {
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			// 新機器システムID番号
+			userdata.kCodeL = rs.getString("x01KCodeL"); // 会社名
+			userdata.kCodeM = rs.getString("x01KCodeM"); // 会社名
+			userdata.kCodeS = rs.getString("x01KCodeS"); // 会社名
+			userdata.kName=toBigJp(rs.getString("x01KName"));
+		    userdata.id=StringUtil.concatWithDelimit("",userdata.kCodeL,userdata.kCodeM,userdata.kCodeS);
+			userdata.kCode= StringUtil.concatWithDelimit("",userdata.kCodeL,userdata.kCodeM,userdata.kCodeS);
+
+			userDataList.add(userdata);
+		}
+
 		if (rs != null) {
 			rs.close();
 		}
@@ -1999,19 +2099,34 @@ public class ValdacUtilites {
 
 /**
  *
- * 機器システムの旧IDをKey
+ * 顧客IDをKey
  *
  * */
-	public static Map<String, ValdacUserDataDto> getallKikiSysIdDataMap(
+	public static Map<String, ValdacUserDataDto> getallKokyakuDataMap(
 			List<ValdacUserDataDto> AllDatalist) {
 		Map<String, ValdacUserDataDto> map = new HashMap<String, ValdacUserDataDto>();
 		for (ValdacUserDataDto userData : AllDatalist) {
 			if (StringUtil.isNotEmpty(userData.id)) {
-				map.put(userData.KikiSysIdOld, userData);
+				map.put(userData.id, userData);
 			}
 		}
 		return map;
 	}
+	/**
+	 *
+	 * 機器システムの旧IDをKey
+	 *
+	 * */
+		public static Map<String, ValdacUserDataDto> getallKikiSysIdDataMap(
+				List<ValdacUserDataDto> AllDatalist) {
+			Map<String, ValdacUserDataDto> map = new HashMap<String, ValdacUserDataDto>();
+			for (ValdacUserDataDto userData : AllDatalist) {
+				if (StringUtil.isNotEmpty(userData.id)) {
+					map.put(userData.KikiSysIdOld, userData);
+				}
+			}
+			return map;
+		}
 	/**
 	 *
 	 * Kiki旧IDをKey
