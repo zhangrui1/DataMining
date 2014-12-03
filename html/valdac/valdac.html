@@ -115,6 +115,7 @@ th.specalt {
 								<option value="kiki">kiki</option>
 								<option value="buhin">buhin</option>
 								<option value="kouji">kouji</option>
+								<option value="kenan">kenan</option>
 							</select>
 						</div>
 						<div>
@@ -124,42 +125,7 @@ th.specalt {
 				</td>
 			</tr>
 			<tr>
-				<td class="alt"><div>機器システム、機器部品の対応関係作成</div> <br /></td>
-				<td>
-					<form id="form1_1" name="form1_1"
-						action="/DataMining/NewRelationTable"
-						enctype="multipart/form-data" method="post">
-						<div>
-							<input type="submit" value="作成" />
-						</div>
-					</form>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt"><div>工事、機器システム、点検機器の対応関係作成</div> <br /></td>
-				<td>
-					<form id="form1_1" name="form1_1"
-						action="/DataMining/NewKoujiRelationTable"
-						enctype="multipart/form-data" method="post">
-												<div>
-							<small>顧客コード</small>
-							 <select name="KCode">
-								<option value="k04">点検機器</option>
-							</select>
-							<small>DLデータ</small>
-							 <select name="mode">
-								<option value="match">変換できた</option>
-								<option value="unmatch">変換できない</option>
-							</select>
-						</div>
-						<div>
-							<input type="submit" value="作成" />
-						</div>
-					</form>
-				</td>
-			</tr>
-			<tr>
-				<td class="alt"><div>分割りで点検機器の対応関係作成　本番　本番</div> <br /></td>
+				<td class="alt"><div>k04点検機器表変換</div> <br /></td>
 				<td>
 					<form id="form1_1" name="form1_1"
 						action="/DataMining/Test2NewKoujiRelationTable"
@@ -172,16 +138,38 @@ th.specalt {
 							</select>
 							<small>顧客コード</small>
 							 <select name="Start">
-								<option value="0">0~20万</option>
-								<option value="20">20万-40万</option>
-								<option value="40">40万-60万</option>
-								<option value="60">60万-80万</option>
-								<option value="80">80万-100万</option>
-								<option value="100">100万-120万</option>
-								<option value="120">120万-140万</option>
-								<option value="140">140万-160万</option>
-								<option value="160">160万-180万</option>
-								<option value="180">180万-200万</option>
+								<option value="0">0~5万</option>
+								<option value="5">5~10万</option>
+								<option value="10">10~15万</option>
+								<option value="15">15~20万</option>
+								<option value="20">20-25万</option>
+								<option value="25">25~30万</option>
+								<option value="30">30~35万</option>
+								<option value="35">35-40万</option>
+								<option value="40">40-45万</option>
+								<option value="45">45-50万</option>
+								<option value="50">50-55万</option>
+								<option value="55">55-60万</option>
+								<option value="60">60-65万</option>
+								<option value="65">65-70万</option>
+								<option value="70">70-75万</option>
+								<option value="75">75-80万</option>
+								<option value="80">80-85万</option>
+								<option value="85">85-90万</option>
+								<option value="90">90-95万</option>
+								<option value="95">95-100万</option>
+								<option value="100">100-105万</option>
+								<option value="105">105-110万</option>
+								<option value="110">110-115万</option>
+								<option value="115">115-120万</option>
+								<option value="120">120-125万</option>
+								<option value="125">125-130万</option>
+								<option value="130">130-135万</option>
+								<option value="135">135-140万</option>
+								<option value="140">140-145万</option>
+								<option value="145">145-150万</option>
+								<option value="150">150-155万</option>
+								<option value="155">155-160万</option>
 							</select>
 							<small>DLデータ</small>
 						</div>
@@ -191,25 +179,73 @@ th.specalt {
 					</form>
 				</td>
 			</tr>
-									<tr>
-				<td class="alt"><div>点検機器履歴作成</div> <br /></td>
+			<tr>
+				<td class="alt"><div>k05点検履歴表変換</div> <br /></td>
 				<td>
 					<form id="form1_1" name="form1_1"
 						action="/DataMining/NewTenkenRireki"
 						enctype="multipart/form-data" method="post">
-						<div>
-							<small>DLデータ</small>
+						<small>DLデータ</small>
 							 <select name="mode">
 								<option value="match">変換できた</option>
 								<option value="unmatch">変換できない</option>
 							</select>
-
 						<div>
 							<input type="submit" value="作成" />
 						</div>
 					</form>
 				</td>
 			</tr>
+			<tr>
+				<td class="alt"><div>w05Kenan懸案事項表変換</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/KenanTable"
+						enctype="multipart/form-data" method="post">
+						<small>DLデータ</small>
+							 <select name="mode">
+								<option value="match">変換できた</option>
+								<option value="unmatch">変換できない</option>
+							</select>
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>w04Image画像表変換</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/ImageTable"
+						enctype="multipart/form-data" method="post">
+						<small>DLデータ</small>
+							 <select name="mode">
+								<option value="match">変換できた</option>
+								<option value="unmatch">変換できない</option>
+							</select>
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="alt"><div>複数のtxtファイル纏める</div> <br /></td>
+				<td>
+					<form id="form1_1" name="form1_1"
+						action="/DataMining/multiTxtToTotal"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="file" name="files" multiple />
+						</div>
+						<div>
+							<input type="submit" value="作成" />
+						</div>
+					</form>
+				</td>
+			</tr>
+
 		</table>
 		<br /> <br />
 		<div>

@@ -39,6 +39,10 @@ public class ValdacConfig {
 	public static final String OUTPUT_TENKENKIKI = "東洋バルブ点検機器変換後.txt";
 	public static final String OUTPUT_TENKENKIKI_NO = "東洋バルブ点検機器変換後.txt";
 
+	/** 東洋バルブ懸案事項*/
+	public static final String OUTPUT_KENAN = "懸案事項変換後.txt";
+	public static final String OUTPUT_KENAN_NO = "懸案事項変換後(NO).txt";
+
 	public static boolean ENQUOTE_BY_DOUBLE_QUOTATION = false;
 	/** 最初の行がヘッダー行であるか否かのブール値 */
 	public static boolean REMOVE_HEADER_RECORD = false;

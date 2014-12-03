@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +23,9 @@ import jp.co.freedom.valdac.utilities.ValdacUtilites;
 /**
  *
  */
-@WebServlet(name = "Test2NewKoujiRelationTable", urlPatterns = { "/Test2NewKoujiRelationTable" })
+@WebServlet(name = "KenanTable", urlPatterns = { "/KenanTable" })
 @MultipartConfig(fileSizeThreshold = 5000000, maxFileSize = 10000000)
-public class Test2NewKoujiRelationTable extends HttpServlet {
+public class KenanTable extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,17 +40,11 @@ public class Test2NewKoujiRelationTable extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		// 顧客名
-		Object StartObj = request.getParameter("Start");
-		String StartName = (String) StartObj;
-		assert StringUtil.isNotEmpty(StartName);
-
-
 		Object mode = request.getParameter("mode");
 		String ModeName = (String) mode;
 		assert StringUtil.isNotEmpty(ModeName);
-
-
 		Connection conn = null;
+
 		try {
 			// JDBCドライバーのロード
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -70,35 +63,14 @@ public class Test2NewKoujiRelationTable extends HttpServlet {
 			// 機器システの全データMap
 			Map<String, ValdacUserDataDto> allKikiDataMap = ValdacUtilites
 					.getallKikiDataMap(allKikiDataList);
-			// 3.工事の全データ
-			List<ValdacUserDataDto> allKoujiDataList = ValdacUtilites
-					.getKoujiIdData(conn);
-			// 工事の全データMap
-			Map<String, ValdacUserDataDto> allKoujiDataListMap = ValdacUtilites
-					.getallKoujiDataListMap(allKoujiDataList);
 
-			// 4.工事点検機器の全データ
-
+			// 懸案事項の全データ
+			List<ValdacUserDataDto> allKenanDataList = ValdacUtilites
+							.getKenanData(conn);
 			// 工事履歴の 工事IDがないデータMap
-			List<ValdacUserDataDto> allNoMatchKoujiRirekiDataList = new ArrayList<ValdacUserDataDto>();
+			List<ValdacUserDataDto> allNoMatchKenanDataList = new ArrayList<ValdacUserDataDto>();
 
-
-			Map<String, List<ValdacUserDataDto>> allKoujiKikiData = new HashMap<String, List<ValdacUserDataDto>>();
-			int startnIndex=Integer.valueOf(StartName);
-			for (int nIndex = startnIndex; nIndex < startnIndex+5; nIndex++) {
-				List<ValdacUserDataDto>	 allKoujiKikiDataList = ValdacUtilites
-							.getKoujiKikiIdDataForStep(conn, nIndex);
-
-				for (ValdacUserDataDto userData : allKoujiKikiDataList) {
-
-					// 工事である場合
-					ValdacUserDataDto tmKoujiData = allKoujiDataListMap
-							.get(userData.koujiIDOld);
-					if (tmKoujiData != null) {
-						userData.koujiID = tmKoujiData.koujiID;
-					} else {
-//						System.out.println("該工事ID：" + userData.koujiIDOld);
-					}
+				for (ValdacUserDataDto userData : allKenanDataList) {
 
 					// 機器システムIDである場合
 					ValdacUserDataDto tmKikisysData = allKikiSysIdDataMap
@@ -118,37 +90,24 @@ public class Test2NewKoujiRelationTable extends HttpServlet {
 					} else {
 //						System.out.println("該機器ID：" + userData.kikiIDOld);
 					}
-
 					// 工事ID、弁ID、機器IDのいずれが空である場合
-					if((userData.koujiID==null) ||(userData.KikiSysId==null) || (userData.kikiID==null) ){
-						allNoMatchKoujiRirekiDataList.add(userData);
+					if((userData.KikiSysId==null) || (userData.kikiID==null) ){
+						allNoMatchKenanDataList.add(userData);
 					}
 				}
-
-				allKoujiKikiData.put(Integer.toString(nIndex),
-						allKoujiKikiDataList);
-
-
-			}
-//			if (!ValdacUtilites.downLoadKoujiRealation2(request, response,
-//					ValdacConfig.OUTPUT_FILENAME_RELATION, allKoujiKikiData,
-//					ValdacConfig.DELIMITER)) {
-//				System.out.println("Error: Failed download CSV file");
-//			}
-//			ModeName="match";
-			if ("match".equals(ModeName)){
-				if (!ValdacUtilites.downLoadTestKoujiRealation2(request, response,
-						ValdacConfig.OUTPUT_TENKENKIKI, allKoujiKikiData,
-						ValdacConfig.DELIMITER,startnIndex)) {
-					System.out.println("Error: Failed download CSV file");
+				if ("match".equals(ModeName)){
+					if (!ValdacUtilites.downLoadKenan(request, response,
+							ValdacConfig.OUTPUT_KENAN, allKenanDataList,
+							ValdacConfig.DELIMITER)) {
+						System.out.println("Error: Failed download CSV file");
+					}
+				}else {
+					if (!ValdacUtilites.downLoadKenan(request, response,
+							ValdacConfig.OUTPUT_KENAN_NO, allNoMatchKenanDataList,
+							ValdacConfig.DELIMITER)) {
+						System.out.println("Error: Failed download CSV file");
+					}
 				}
-			}else {
-				if (!ValdacUtilites.downLoadTenkenRireki(request, response,
-						ValdacConfig.OUTPUT_TENKENKIKI_NO, allNoMatchKoujiRirekiDataList,
-						ValdacConfig.DELIMITER)) {
-					System.out.println("Error: Failed download CSV file");
-				}
-			}
 
 
 

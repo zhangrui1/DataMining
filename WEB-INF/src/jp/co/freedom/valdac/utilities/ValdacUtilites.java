@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -925,7 +927,7 @@ public class ValdacUtilites {
 		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
 
 		// 対応関係テーブルの新ID
-		int count = 1;
+		int count = 1580000;
 			if (userDataList!=null){
 				for (ValdacUserDataDto userdata : userDataList) {
 					List<String> cols = new ArrayList<String>();
@@ -962,6 +964,188 @@ public class ValdacUtilites {
 		} catch (Exception e) {
 			return false;
 		}
+		return true;
+	}
+	/**
+	 * 懸案事項ダウンロード
+	 *
+	 * */
+	public static boolean downLoadKenan(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			 List<ValdacUserDataDto> userDataList, String dim) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定する
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(StringUtil.enquote("koujiId"));
+		header.add(StringUtil.enquote("koujiOld"));
+		header.add(StringUtil.enquote("kikisysid"));
+		header.add(StringUtil.enquote("kikisysidOld"));
+		header.add(StringUtil.enquote("kikiId"));
+		header.add(StringUtil.enquote("kikiidOld"));
+
+		header.add(StringUtil.enquote("w05KenanNo"));
+		header.add(StringUtil.enquote("hakkenDate"));
+		header.add(StringUtil.enquote("taisakuDate"));
+		header.add(StringUtil.enquote("taiouFlg"));
+		header.add(StringUtil.enquote("jisyo"));
+		header.add(StringUtil.enquote("buhin"));
+		header.add(StringUtil.enquote("gensyo"));
+		header.add(StringUtil.enquote("youin"));
+		header.add(StringUtil.enquote("taisaku"));
+		header.add(StringUtil.enquote("hakkenJyokyo"));
+		header.add(StringUtil.enquote("syotiNaiyou"));
+		header.add(StringUtil.enquote("trkDate"));
+		header.add(StringUtil.enquote("updDate"));
+		header.add(StringUtil.enquote("end"));
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		 //現在日時を取得する
+        Calendar c = Calendar.getInstance();
+      //フォーマットパターンを指定して表示する
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+
+		// 対応関係テーブルの新ID
+		int count = 1;
+			if (userDataList!=null){
+				for (ValdacUserDataDto userdata : userDataList) {
+					List<String> cols = new ArrayList<String>();
+					cols.add(String.valueOf(count++));
+					cols.add(StringUtil.enquote(userdata.koujiID));
+					cols.add(StringUtil.enquote(userdata.koujiIDOld));
+					cols.add(StringUtil.enquote(userdata.KikiSysId));
+					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
+					cols.add(StringUtil.enquote(userdata.kikiID));
+					cols.add(StringUtil.enquote(userdata.kikiIDOld));
+
+					cols.add(StringUtil.enquote(userdata.kenanNo));
+					cols.add(StringUtil.enquote(userdata.hakkenDate));
+					cols.add(StringUtil.enquote(userdata.taisakuDate));
+					cols.add(StringUtil.enquote(userdata.taiouFlg));
+					cols.add(StringUtil.enquote(userdata.jisyo));
+					cols.add(StringUtil.enquote(userdata.buhin));
+					cols.add(StringUtil.enquote(userdata.gensyo));
+					cols.add(StringUtil.enquote(userdata.youin));
+					cols.add(StringUtil.enquote(userdata.taisaku));
+					cols.add(StringUtil.enquote(userdata.hakkenJyokyo));
+					cols.add(StringUtil.enquote(userdata.syotiNaiyou));
+					//作成時間
+					cols.add(StringUtil.enquote(userdata.hakkenDate));
+					//更新時間
+					if("".equals(userdata.taisakuDate)){
+						cols.add(StringUtil.enquote(userdata.hakkenDate));
+					}else{
+						cols.add(StringUtil.enquote(userdata.taisakuDate));
+					}
+					cols.add(StringUtil.enquote("end"));
+//					cols.add(StringUtil.enquote(sdf.format(c.getTime())));
+//					cols.add(StringUtil.enquote(sdf.format(c.getTime())));
+
+					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+				}
+			}
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return false;
+				}
+		return true;
+	}
+
+	/**
+	 * 画像ダウンロード
+	 *
+	 * */
+	public static boolean downLoadImage(HttpServletRequest request,
+			HttpServletResponse response, String outputFileName,
+			 List<ValdacUserDataDto> userDataList, String dim) throws IOException {
+		String encordedUrl = URLEncoder.encode(outputFileName, "UTF-8");
+
+		// コンテキストにダウンロードファイル情報を設定する
+		response.setContentType("application/csv;charset=UTF-8");
+		response.setHeader("Content-disposition", "attachment;filename="
+				+ encordedUrl);
+
+		// 出力用のWriterを生成する
+		PrintWriter writer = response.getWriter();
+		// エンコード=UTF-8であるCSVをExcelで正しく表示できるようにBOMを出力
+		writer.print('\uFEFF');
+
+		List<String> header = new ArrayList<String>();
+		header.add(String.valueOf("id"));
+		header.add(StringUtil.enquote("koujiId"));
+		header.add(StringUtil.enquote("koujiOld"));
+		header.add(StringUtil.enquote("kikisysid"));
+		header.add(StringUtil.enquote("kikisysidOld"));
+
+		header.add(StringUtil.enquote("imagesyu"));
+		header.add(StringUtil.enquote("page"));
+		header.add(StringUtil.enquote("imagename"));
+		header.add(StringUtil.enquote("papersize"));
+		header.add(StringUtil.enquote("imagebiko"));
+		header.add(StringUtil.enquote("tosyoMei"));
+
+		header.add(StringUtil.enquote("trkDate"));
+		header.add(StringUtil.enquote("updDate"));
+		header.add(StringUtil.enquote("end"));
+		FileUtil.writer(header, writer, dim); // headerのデータ書き出し
+
+		 //現在日時を取得する
+        Calendar c = Calendar.getInstance();
+      //フォーマットパターンを指定して表示する
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+
+
+		// 対応関係テーブルの新ID
+		int count = 1;
+			if (userDataList!=null){
+				for (ValdacUserDataDto userdata : userDataList) {
+					List<String> cols = new ArrayList<String>();
+					cols.add(String.valueOf(count++));
+					cols.add(StringUtil.enquote(userdata.koujiID));
+					cols.add(StringUtil.enquote(userdata.koujiIDOld));
+					cols.add(StringUtil.enquote(userdata.KikiSysId));
+					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
+
+
+					cols.add(StringUtil.enquote(userdata.imagesyu));
+					cols.add(StringUtil.enquote(userdata.page));
+					cols.add(StringUtil.enquote(userdata.imagename));
+					cols.add(StringUtil.enquote(userdata.papersize));
+					cols.add(StringUtil.enquote(userdata.imagebiko));
+					cols.add(StringUtil.enquote(userdata.tosyoMei));
+
+
+					//更新時間
+					if("".equals(userdata.trkDate)){
+						cols.add(StringUtil.enquote("2014/12/01"));
+						cols.add(StringUtil.enquote("2014/12/01"));
+					}else{
+						cols.add(StringUtil.enquote(userdata.trkDate));
+						cols.add(StringUtil.enquote(userdata.updDate));
+					}
+					cols.add(StringUtil.enquote("end"));
+
+
+					FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
+				}
+			}
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return false;
+				}
 		return true;
 	}
 	/**
@@ -1162,6 +1346,53 @@ public class ValdacUtilites {
 			ps.setString(++position, "2014/12/01");//person
 			ps.setString(++position, "2014/12/01");//person
 
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
+
+	/**
+	 *懸案テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLExceptionKenan
+	 */
+	public static boolean importDataKenan(Connection conn,
+			List<String[]> csvDataList, String tablename) throws SQLException {
+		int count = 80000000;
+		for (String[] csvData : csvDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+			Integer leng = csvData.length;
+			for (int nIndex = 1; nIndex <= 16; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+//			ps.setInt(++position, count++);
+			ps.setString(++position, csvData[0]);//Id
+
+			ps.setString(++position, csvData[1]);//Id
+			ps.setString(++position, csvData[1]);//Id
+			ps.setString(++position, csvData[5]);//Id
+
+//			ps.setInt(++position, 1);//koujiId
+//			ps.setInt(++position, 1);//koujirelationId
+//			ps.setInt(++position, Integer.parseInt(csvData[5]));//koujirelationId
+			for (int nIndex =8; nIndex <= 19; nIndex++) {
+				ps.setString(++position, csvData[nIndex]);
+			}
 			int result = ps.executeUpdate();
 			if (result == 0) {
 				return false;
@@ -1447,9 +1678,9 @@ public class ValdacUtilites {
 			count=count+1;
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
 
-			String KCode=StringUtil.concatWithDelimit("", "0",rs.getString("k05KCode"));
+			String KCode=StringUtil.convertFixedLengthData(rs.getString("k05KCode"),6,"0");
 			String KjSeq=StringUtil.convertFixedLengthData(rs.getString("k05KjSeq"),3,"0");
-			String Kikisys=StringUtil.concatWithDelimit("", "0",rs.getString("k05KikiSysId"));
+			String Kikisys=StringUtil.convertFixedLengthData(rs.getString("k05KikiSysId"),11,"0");
 			String KikiBunrui=rs.getString("k05KikiBunrui");
 			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k05KikiBunruiSeq"),2,"0");
 
@@ -1464,11 +1695,11 @@ public class ValdacUtilites {
 
 //			//点検結果部分
 
-			userdata.tenkenRank=rs.getString("k05TenkenRank");
-			userdata.tenkenNaiyo=rs.getString("k05Naiyo");
-			userdata.tenkenKekka0=rs.getString("k05Kekka");
-            userdata.tenkenNendo=rs.getString("k05TenkenNendo");
-            userdata.KanryoFlg=rs.getString("k05KanryoFlg");
+			userdata.tenkenRank=toBigJp(rs.getString("k05TenkenRank"));
+			userdata.tenkenNaiyo=toBigJp(rs.getString("k05Naiyo"));
+			userdata.tenkenKekka0=toBigJp(rs.getString("k05Kekka"));
+            userdata.tenkenNendo=toBigJp(rs.getString("k05TenkenNendo"));
+            userdata.KanryoFlg=toBigJp(rs.getString("k05KanryoFlg"));
 
 			userDataList.add(userdata);
 		}
@@ -1480,6 +1711,117 @@ public class ValdacUtilites {
 		}
 		return userDataList;
 	}
+
+
+	/**
+	 * 懸案事項
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> getKenanData(Connection conn)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql="SELECT * FROM w05Kenan ;";
+
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=1;
+		while (rs.next()) {
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			String Kikisys=StringUtil.convertFixedLengthData(rs.getString("w05KikiSysId"),11,"0");
+			String KikiBunrui=rs.getString("w05KikiBunrui");
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("w05KikiBunruiSeq"),2,"0");
+
+            userdata.id=Integer.toString(count);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+//			//懸案事項部分
+
+			userdata.kenanNo=toBigJp(rs.getString("w05KenanNo"));
+			userdata.hakkenDate=toBigJp(rs.getString("w05HakkenDate"));
+			userdata.taisakuDate=toBigJp(rs.getString("w05TaisakuDate"));
+            userdata.taiouFlg=toBigJp(rs.getString("w05TaiouFlg"));
+            userdata.jisyo=toBigJp(rs.getString("w05Jisyo"));
+            userdata.buhin=toBigJp(rs.getString("w05Buhin"));
+            userdata.gensyo=toBigJp(rs.getString("w05Gensyo"));
+            userdata.youin=toBigJp(rs.getString("w05Youin"));
+            userdata.taisaku=toBigJp(rs.getString("w05Taisaku"));
+            userdata.hakkenJyokyo=toBigJp(rs.getString("w05HakkenJyokyo"));
+            userdata.syotiNaiyou=toBigJp(rs.getString("w05SyotiNaiyou"));
+
+
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
+
+	/**
+	 * 画像
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> getImageData(Connection conn)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql="SELECT * FROM w04image ;";
+
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=1;
+		while (rs.next()) {
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			String Kikisys=StringUtil.convertFixedLengthData(rs.getString("w04KikiSysId"),11,"0");
+
+            userdata.id=Integer.toString(count);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+
+			//画像部分
+
+			userdata.imagesyu=toBigJp(rs.getString("w04ImageSyu"));
+			userdata.page=toBigJp(rs.getString("w04Page"));
+			userdata.imagename=StringUtil.concatWithDelimit("",toBigJp(rs.getString("w04ImageDir")),toBigJp(rs.getString("w04ImageName")));
+            userdata.papersize=toBigJp(rs.getString("w04PaperSize"));
+            userdata.imagebiko=toBigJp(rs.getString("w04ImageSyubetu"));
+            userdata.tosyoMei=toBigJp(rs.getString("w04TosyoMei"));
+            userdata.trkDate=rs.getString("w04SakuseiDate");
+            userdata.updDate=rs.getString("w04SakuseiDate");
+
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
 
 	/**
 	 * 機器部品ID取得

@@ -53,6 +53,30 @@ public class ValdacUserDataDto  {
 	public String tenkenNendo;
 
 
+//	/** 懸案事項用 */
+	public String kenanNo;
+	public String hakkenDate;
+	public String taisakuDate;
+	public String taiouFlg;
+	public String jisyo;
+	public String buhin;
+	public String gensyo;
+	public String youin;
+	public String taisaku;
+	public String hakkenJyokyo;
+	public String syotiNaiyou;
+	public String trkDate;
+	public String updDate;
+
+//画像部分
+
+	public String imagesyu;
+	public String page;
+	public String imagename;
+	public String papersize;
+	public String imagebiko;
+	public String tosyoMei;
+
 	/** 機器ID */
 	public Map<String,ValdacBuhiDto> kikiList;
 
