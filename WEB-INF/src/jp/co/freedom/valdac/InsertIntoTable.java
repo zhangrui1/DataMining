@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import jp.co.freedom.common.utilities.Config;
 import jp.co.freedom.common.utilities.FileUtil;
 import jp.co.freedom.common.utilities.StringUtil;
+import jp.co.freedom.master.dto.valdac.ValdacUserDataDto;
 import jp.co.freedom.valdac.utilities.ValdacConfig;
 import jp.co.freedom.valdac.utilities.ValdacUtilites;
 
@@ -61,8 +63,12 @@ public class InsertIntoTable extends HttpServlet {
 		List<String[]> csvData = FileUtil.loadCsv(uploadDirPath, false,true,
 				ValdacConfig.DELIMITER, ValdacConfig.ALLOWS_EXTENSIONS);
 		assert csvData != null;
-
 		Connection conn = null;
+
+
+
+
+
 		try {
 			// JDBCドライバーのロード
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -70,15 +76,24 @@ public class InsertIntoTable extends HttpServlet {
 			conn = DriverManager.getConnection(ValdacConfig.PSQL_URL,
 					ValdacConfig.PSQL_USER, ValdacConfig.PSQL_PASSWORD);
 
+						// 1.顧客先の全データ
+			List<ValdacUserDataDto> allLocationIdData = ValdacUtilites
+					.getKokyakuAfterData(conn);
+			// 機器システムの全データMap
+			Map<String, ValdacUserDataDto> allLocationDataMap = ValdacUtilites
+					.getallKokyakuDataMap(allLocationIdData);
+
+
+
 			ValdacUtilites.resetDB(conn,tablename); // DBの初期化
-			if("kikisys".equals(tablename)){
-				ValdacUtilites.importDataKikiSys(conn, csvData,tablename); // 機器システムテーブル
+			if("kikisystem".equals(tablename)){
+				ValdacUtilites.importDataKikiSys(conn, csvData,tablename,allLocationDataMap); // 機器システムテーブル
 			}else if("kiki".equals(tablename)){
 				ValdacUtilites.importDataKiki(conn, csvData,tablename); // 機器テーブル
 			}else if("buhin".equals(tablename)){
 				ValdacUtilites.importDataBuhi(conn, csvData,tablename); // 部品テーブル
 			}else if("kouji".equals(tablename)){
-				ValdacUtilites.importDataKouji(conn, csvData,tablename); // 部品テーブル
+				ValdacUtilites.importDataKouji(conn, csvData,tablename,allLocationDataMap); // 部品テーブル
 			}
 
 

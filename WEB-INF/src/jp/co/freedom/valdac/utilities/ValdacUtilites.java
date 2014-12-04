@@ -1240,19 +1240,29 @@ public class ValdacUtilites {
 	 * @throws SQLException
 	 */
 	public static boolean importDataKikiSys(Connection conn,
-			List<String[]> csvDataList, String tablename) throws SQLException {
+			List<String[]> csvDataList, String tablename,Map<String, ValdacUserDataDto> allLocationDataMap) throws SQLException {
 		int count = 1000;
 		for (String[] csvData : csvDataList) {
 			String sql = "INSERT INTO  " + tablename + " VALUES (";
 			List<String> query = new ArrayList<String>();
 			Integer leng = csvData.length;
-			for (int nIndex = 1; nIndex <= 28; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+			for (int nIndex = 1; nIndex <= 29; nIndex++) { // [備忘]カラム追加時はカウンタ追加
 				query.add("?");
 			}
 			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
 			ps.setInt(++position, count++);
+			//弁の顧客先
+			String locationCode=csvData[2];
+			String location=csvData[2];
+			if(!("".equals(locationCode))){
+				ValdacUserDataDto Tempresult=allLocationDataMap.get(csvData[2]);
+				if (Tempresult!=null)
+				location=Tempresult.kName;
+			}
+			ps.setString(++position,location);
+
 			for (int nIndex =2; nIndex <= 6; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
@@ -1378,7 +1388,7 @@ public class ValdacUtilites {
 	 * @throws SQLException
 	 */
 	public static boolean importDataKouji(Connection conn,
-			List<String[]> csvDataList, String tablename) throws SQLException {
+			List<String[]> csvDataList, String tablename,Map<String, ValdacUserDataDto> allLocationDataMap) throws SQLException {
 		int count = 60000000;
 		for (String[] csvData : csvDataList) {
 			String sql = "INSERT INTO  " + tablename + " VALUES (";
@@ -1400,7 +1410,14 @@ public class ValdacUtilites {
 			}
 
 			for (int nIndex = 16; nIndex <= 16; nIndex++) {
-				String location=StringUtil.concatWithDelimit("",csvData[1],csvData[2]);
+//				String location=StringUtil.concatWithDelimit("",csvData[1],csvData[2]);
+				String locationCode=csvData[1];
+				String location=csvData[1];
+				if(!("".equals(locationCode))){
+					ValdacUserDataDto Tempresult=allLocationDataMap.get(csvData[1]);
+					if (Tempresult!=null)
+					location=Tempresult.kName;
+				}
 				ps.setString(++position,location);
 			}
 			ps.setString(++position, "1");//status
@@ -1525,6 +1542,41 @@ public class ValdacUtilites {
 			userdata.kName=toBigJp(rs.getString("x01KName"));
 		    userdata.id=StringUtil.concatWithDelimit("",userdata.kCodeL,userdata.kCodeM,userdata.kCodeS);
 			userdata.kCode= StringUtil.concatWithDelimit("",userdata.kCodeL,userdata.kCodeM,userdata.kCodeS);
+
+			userDataList.add(userdata);
+		}
+
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
+
+	/**
+	 * 顧客データ変更後のデータを取得
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 */
+	public static List<ValdacUserDataDto> getKokyakuAfterData(Connection conn)
+			throws SQLException {
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql = "SELECT * FROM location;";
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=1;
+		while (rs.next()) {
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			userdata.kCode=toBigJp(rs.getString("kCode"));
+			userdata.kName=toBigJp(rs.getString("kCodeKanji"));
+		    userdata.id=toBigJp(rs.getString("kCode"));
+
 
 			userDataList.add(userdata);
 		}
