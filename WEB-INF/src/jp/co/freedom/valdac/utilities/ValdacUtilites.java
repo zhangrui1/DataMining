@@ -79,19 +79,33 @@ public class ValdacUtilites {
 			Integer rowLen = row.length; // 実際の長
 			if (rowLen > 0) {
 				String[] result = new String[length + 1];
-				result[0] = String.valueOf(event + nIndex);
-				for (int nTable = 1; nTable < rowLen; nTable++) {
-					result[nTable] = toBigJp(row[nTable]);
+//				result[0] = String.valueOf(event + nIndex);
+				for (int nTable = 0; nTable < rowLen; nTable++) {
+//					result[nTable] = toBigJp(row[nTable]);
+				    result[nTable] = zenkakuToHankaku(row[nTable]);
 				}
 				for (int mTable = rowLen; mTable < length + 1; mTable++) {
 					result[mTable] = "";
 				}
-				result[length] = "end";
+//				result[length] = "end";
 				userDataList.add(result);
 			}
 		}
 		return userDataList;
 	}
+
+	private static String zenkakuToHankaku(String value) {
+	    StringBuilder sb = new StringBuilder(value);
+	    for (int i = 0; i < sb.length(); i++) {
+	        int c = (int) sb.charAt(i);
+	        if ((c >= 0xFF10 && c <= 0xFF19) || (c >= 0xFF21 && c <= 0xFF3A) || (c >= 0xFF41 && c <= 0xFF5A)) {
+	            sb.setCharAt(i, (char) (c - 0xFEE0));
+	        }
+	    }
+	    value = sb.toString();
+	    return value;
+	}
+
 
 	/**
 	 * カナ半角を全角変換.
@@ -608,6 +622,7 @@ public class ValdacUtilites {
 		return 0;
 	}
 
+
 	/**
 	 * 照合結果をTXT形式でダウンロード
 	 *
@@ -1017,12 +1032,12 @@ public class ValdacUtilites {
 
 
 		// 対応関係テーブルの新ID
-		int count = 1;
+		int count = 1700000;
 			if (userDataList!=null){
 				for (ValdacUserDataDto userdata : userDataList) {
 					List<String> cols = new ArrayList<String>();
 					cols.add(String.valueOf(count++));
-					cols.add(StringUtil.enquote(userdata.koujiID));
+					cols.add(StringUtil.enquote("0"));
 					cols.add(StringUtil.enquote(userdata.koujiIDOld));
 					cols.add(StringUtil.enquote(userdata.KikiSysId));
 					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
@@ -1090,8 +1105,13 @@ public class ValdacUtilites {
 		header.add(StringUtil.enquote("kikisysidOld"));
 
 		header.add(StringUtil.enquote("imagesyu"));
+		header.add(StringUtil.enquote("imagesyuNoSub"));
 		header.add(StringUtil.enquote("page"));
+		header.add(StringUtil.enquote("imageDir"));
 		header.add(StringUtil.enquote("imagename"));
+		header.add(StringUtil.enquote("objectName"));
+		header.add(StringUtil.enquote("imagenameAll"));
+
 		header.add(StringUtil.enquote("papersize"));
 		header.add(StringUtil.enquote("imagebiko"));
 		header.add(StringUtil.enquote("tosyoMei"));
@@ -1120,8 +1140,13 @@ public class ValdacUtilites {
 
 
 					cols.add(StringUtil.enquote(userdata.imagesyu));
+					cols.add(StringUtil.enquote(userdata.imagesyuNoSub));
 					cols.add(StringUtil.enquote(userdata.page));
+					cols.add(StringUtil.enquote(userdata.imageDir));
 					cols.add(StringUtil.enquote(userdata.imagename));
+					cols.add(StringUtil.enquote(userdata.objectName));
+					cols.add(StringUtil.enquote(userdata.imagenameAll));
+
 					cols.add(StringUtil.enquote(userdata.papersize));
 					cols.add(StringUtil.enquote(userdata.imagebiko));
 					cols.add(StringUtil.enquote(userdata.tosyoMei));
@@ -1937,7 +1962,7 @@ public class ValdacUtilites {
 			throws SQLException, IOException {
 
 		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
-		String sql="SELECT * FROM w04image ;";
+		String sql="SELECT * FROM w04image where w04KikiSysId  not like '%STOCK%';";
 
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery(sql);
@@ -1955,8 +1980,12 @@ public class ValdacUtilites {
 			//画像部分
 
 			userdata.imagesyu=toBigJp(rs.getString("w04ImageSyu"));
+			userdata.imagesyuNoSub=toBigJp(rs.getString("w04ImageSyuNoSub"));
 			userdata.page=toBigJp(rs.getString("w04Page"));
-			userdata.imagename=StringUtil.concatWithDelimit("",toBigJp(rs.getString("w04ImageDir")),toBigJp(rs.getString("w04ImageName")));
+			userdata.imageDir=toBigJp(rs.getString("w04ImageDir"));
+			userdata.imagename=toBigJp(rs.getString("w04ImageName"));
+			userdata.objectName=toBigJp(rs.getString("w04ObjectName"));
+			userdata.imagenameAll=StringUtil.concatWithDelimit("",toBigJp(rs.getString("w04ImageDir")),toBigJp(rs.getString("w04ImageName")));
             userdata.papersize=toBigJp(rs.getString("w04PaperSize"));
             userdata.imagebiko=toBigJp(rs.getString("w04ImageSyubetu"));
             userdata.tosyoMei=toBigJp(rs.getString("w04TosyoMei"));

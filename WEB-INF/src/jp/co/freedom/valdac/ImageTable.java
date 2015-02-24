@@ -85,13 +85,13 @@ public class ImageTable extends HttpServlet {
 				}
 				if ("match".equals(ModeName)){
 					if (!ValdacUtilites.downLoadImage(request, response,
-							ValdacConfig.OUTPUT_KENAN, allImageDataList,
+							ValdacConfig.OUTPUT_IMAGEREPORT, allImageDataList,
 							ValdacConfig.DELIMITER)) {
 						System.out.println("Error: Failed download CSV file");
 					}
 				}else {
 					if (!ValdacUtilites.downLoadImage(request, response,
-							ValdacConfig.OUTPUT_KENAN_NO, allNoMatchKenanDataList,
+							ValdacConfig.OUTPUT_IMAGEREPORT_NO, allNoMatchKenanDataList,
 							ValdacConfig.DELIMITER)) {
 						System.out.println("Error: Failed download CSV file");
 					}

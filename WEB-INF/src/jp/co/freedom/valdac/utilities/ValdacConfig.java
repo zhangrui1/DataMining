@@ -43,6 +43,11 @@ public class ValdacConfig {
 	public static final String OUTPUT_KENAN = "懸案事項変換後.txt";
 	public static final String OUTPUT_KENAN_NO = "懸案事項変換後(NO).txt";
 
+	/** 東洋バルブ画像事項*/
+	public static final String OUTPUT_IMAGEREPORT = "画像情報変換後.txt";
+	public static final String OUTPUT_IMAGEREPORT_NO = "画像情報変換後(NO).txt";
+
+
 	/** 東洋バルブ顧客データ*/
 	public static final String OUTPUT_KOKYAKU = "顧客データ変換後.txt";
 
