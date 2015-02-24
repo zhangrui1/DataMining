@@ -19,15 +19,15 @@ import jp.co.freedom.common.utilities.StringUtil;
 
 /**
  * 【広告対象】審査表データ マスターデータDL用Config
- * 
+ *
  * @author フリーダム・グループ
- * 
+ *
  */
 public class AdvertisingAwardsUtil {
 
 	/**
 	 * マスターデータを取得
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @return　マスターデータ
@@ -65,7 +65,7 @@ public class AdvertisingAwardsUtil {
 
 	/**
 	 * 指定数値を0補完して長さsizeの数値文字列に変換
-	 * 
+	 *
 	 * @param value
 	 *            指定数値
 	 * @param size
@@ -80,7 +80,7 @@ public class AdvertisingAwardsUtil {
 
 	/**
 	 * イメージファイルパスより媒体を特定
-	 * 
+	 *
 	 * @param imagePath
 	 *            イメージファイルパス
 	 * @return 媒体ID
@@ -101,7 +101,7 @@ public class AdvertisingAwardsUtil {
 
 	/**
 	 * テキストデータのダウンロード
-	 * 
+	 *
 	 * @param request
 	 *            HttpServletRequest
 	 * @param response
@@ -141,7 +141,7 @@ public class AdvertisingAwardsUtil {
 						* nRecord <= 120 ? AdvertisingAwardsConfig.JUDGE_DATA_MAX_NUMBER
 						* nRecord
 						: 120;
-				data.add("SM3243"); // 固定ヘッダー(1～3)
+				data.add("SM3244"); // 固定ヘッダー(1～3)
 				data.add(awardInfo.sex); // 4.性別
 				data.add(areaId); // 5.地区
 				data.add(awardInfo.judgeManId); // 6.審査員ID
@@ -164,7 +164,7 @@ public class AdvertisingAwardsUtil {
 
 	/**
 	 * CSVデータのダウンロード
-	 * 
+	 *
 	 * @param request
 	 *            HttpServletRequest
 	 * @param response
@@ -222,7 +222,7 @@ public class AdvertisingAwardsUtil {
 						* nRecord <= 120 ? AdvertisingAwardsConfig.JUDGE_DATA_MAX_NUMBER
 						* nRecord
 						: 120;
-				data.add("SM3243"); // 固定ヘッダー(1～3)
+				data.add("SM3244"); // 固定ヘッダー(1～3)
 				data.add(awardInfo.sex); // 4.性別
 				data.add(areaId); // 5.地区
 				data.add(awardInfo.judgeManId); // 6.審査員ID
@@ -258,7 +258,7 @@ public class AdvertisingAwardsUtil {
 
 	/**
 	 * 審査データの正規化
-	 * 
+	 *
 	 * @param judgeData
 	 *            審査データ
 	 * @return 正規化後の審査データ
@@ -277,7 +277,7 @@ public class AdvertisingAwardsUtil {
 
 	/**
 	 * 指定個数分のvalueの連続する文字列を作成
-	 * 
+	 *
 	 * @param size
 	 *            個数
 	 * @return 生成文字列

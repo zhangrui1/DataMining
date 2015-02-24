@@ -71,8 +71,12 @@ public class ValdacUserDataDto  {
 //画像部分
 
 	public String imagesyu;
+	public String imagesyuNoSub;
 	public String page;
+	public String imageDir;
 	public String imagename;
+	public String objectName;
+	public String imagenameAll;
 	public String papersize;
 	public String imagebiko;
 	public String tosyoMei;

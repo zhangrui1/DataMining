@@ -16,6 +16,7 @@ import jp.co.freedom.common.utilities.StringUtil;
 import jp.co.freedom.master.dto.mesago.MesagoUserDataDto;
 import jp.co.freedom.master.utilities.mesago.FinalDataDLForMesagoUtil;
 import jp.co.freedom.master.utilities.mesago.MesagoConfig;
+import jp.co.freedom.master.utilities.mesago.osaka.OsakaConfig;
 
 /**
  * 【MESAGO】クレンジング後の最終データDL用サーブレット
@@ -51,8 +52,11 @@ public class FinalDataDLForMesago extends HttpServlet {
 			// JDBCドライバーのロード
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			// DBアクセス
-			conn = DriverManager.getConnection(MesagoConfig.PSQL_URL_REMOTE_IP2014,
-					MesagoConfig.PSQL_USER, MesagoConfig.PSQL_PASSWORD_REMOTE);
+//			conn = DriverManager.getConnection(MesagoConfig.PSQL_URL_REMOTE_IP2014,
+//					MesagoConfig.PSQL_USER, MesagoConfig.PSQL_PASSWORD_REMOTE);
+			conn = DriverManager.getConnection(
+					OsakaConfig.PSQL_URL_LOCAL_OSAKA2014, OsakaConfig.PSQL_USER,
+					OsakaConfig.PSQL_PASSWORD_LOCAL);
 			List<MesagoUserDataDto> userDataList = FinalDataDLForMesagoUtil
 					.getData(conn, mode);
 			if (!FinalDataDLForMesagoUtil.downLoadForFinalData(request,

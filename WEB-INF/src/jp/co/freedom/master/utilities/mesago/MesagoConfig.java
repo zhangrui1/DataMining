@@ -14,10 +14,12 @@ public class MesagoConfig {
 	// "jdbc:mysql://118.22.30.75:63306/bwj2014?useUnicode=true&characterEncoding=utf8";
 	public static final String PSQL_URL_REMOTE = "jdbc:mysql://118.22.30.75:63306/micro?useUnicode=true&characterEncoding=utf8";
 	public static final String PSQL_URL_REMOTE_BWJ2014TOKYO = "jdbc:mysql://118.22.30.75:63306/bwjtokyo2014?useUnicode=true&characterEncoding=utf8";
-	public static final String PSQL_URL_LOCAL_BWJ2014TOKYO = "jdbc:mysql://localhost:3306/bwjtokyo2014?useUnicode=true&characterEncoding=utf8";	
-	public static final String PSQL_URL_LOCAL_ILF2014 = "jdbc:mysql://localhost:3306/ilf2014?useUnicode=true&characterEncoding=utf8";	
+	public static final String PSQL_URL_LOCAL_BWJ2014TOKYO = "jdbc:mysql://localhost:3306/bwjtokyo2014?useUnicode=true&characterEncoding=utf8";
+	public static final String PSQL_URL_LOCAL_ILF2014 = "jdbc:mysql://localhost:3306/ilf2014?useUnicode=true&characterEncoding=utf8";
+	public static final String PSQL_URL_LOCAL_OSAKA2014 = "jdbc:mysql://localhost:3306/osaka?useUnicode=true&characterEncoding=utf8";
 	public static final String PSQL_URL_REMOTE_ILF2014 = "jdbc:mysql://118.22.30.75:63306/ilf2014?useUnicode=true&characterEncoding=utf8";
 	public static final String PSQL_URL_REMOTE_IP2014 = "jdbc:mysql://118.22.30.75:63306/ip2014?useUnicode=true&characterEncoding=utf8";
+
 	// public static final String PSQL_URL_REMOTE =
 	// "jdbc:mysql://118.22.30.75:63306/bwjtokyo2014?useUnicode=true&characterEncoding=utf8";
 
@@ -124,10 +126,10 @@ public class MesagoConfig {
 	public static final String YEAR = "2014";
 
 	/** 開催月 */
-	public static final String MONTH = "07";
+	public static final String MONTH = "10";
 
 	/** 開催日 */
-	public static final String[] DAYS = { "24", "25", "26" , "27"};
+	public static final String[] DAYS = { "20", "21", "22"};
 
 	/** 開場時間 */
 	public static final String HOUR = "10";

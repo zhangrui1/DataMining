@@ -320,6 +320,51 @@ th.specalt {
 				</td>
 			</tr>
 			<tr>
+				<td class="duplicate"><div>【1次納品データ】OSAKA バーコード照合結果データ(名刺＆リクエストコード)の作成</div>
+					<br />
+					<div style="font-size: small"> <br />
+					</div></td>
+				<td class="duplicate">
+					<form id="form10" name="form10"
+						action="/DataMining/BarcodeMatchingForMesagoOsaka"
+						onsubmit="return toNextPage('goHomeBtn10');" target="_parent">
+						<div>
+							<select name="mode">
+								<option value="match">マッチング</option>
+								<option value="unmatch">アンマッチング</option>
+							</select>
+						</div>
+						<div>
+							<input type="submit" value="ダウンロード" id="goHomeBtn10" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td class="ilt"><div>【1次納品データ】OSAKA:事前未来場者データのダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterPreDataMesagoOsaka"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+						<tr>
+				<td class="ilt"><div>【1次納品データ】OSAKA:当日データのダウンロード</div> <br /></td>
+				<td>
+					<form id="form4" name="form4"
+						action="/DataMining/MasterAppDataDLForOsaka"
+						onsubmit="return toNextPage('goHomeBtn4');" target="_parent">
+						<div>
+							<input type="submit" value="DL" id="goHomeBtn4" />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
 				<td class="alt"><div>【2次納品データ】データクレンジング</div> <br /></td>
 				<td>
 					<form id="form5" name="form5"

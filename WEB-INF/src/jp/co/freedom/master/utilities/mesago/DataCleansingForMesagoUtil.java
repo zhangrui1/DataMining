@@ -27,9 +27,9 @@ import jp.co.freedom.master.dto.mesago.MesagoUserDataDto;
 
 /**
  * 【MESAGO】データクレンジング用ユーティリティ
- * 
+ *
  * @author フリーダム・グループ
- * 
+ *
  */
 public class DataCleansingForMesagoUtil {
 
@@ -51,7 +51,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 全ての1次データを取得
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @param table
@@ -256,7 +256,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 来場フラグのマージ
-	 * 
+	 *
 	 * @param visitFlg
 	 *            複数の来場フラグ
 	 * @return ブール型の来場フラグ
@@ -272,7 +272,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 会社名に「●」が含まれている場合に住所が完全一致する別データより会社名を修復
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @param allDataList
@@ -303,7 +303,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 会社名がNGワードを含んでいるか否かの検証
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -325,7 +325,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * NGワードを含む会社名を削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -344,7 +344,9 @@ public class DataCleansingForMesagoUtil {
 			if (StringUtil.isNotEmpty(companyName)) {
 				for (String keyword : keywords) {
 					if (keyword.equals(companyName)) {
-						((MesagoCardDto) userdata.cardInfo).V_CORP_UPDATE = null;
+//						((MesagoCardDto) userdata.cardInfo).V_CORP_UPDATE = null;
+						//2015/2/21 大阪の件から修正
+						((MesagoCardDto) userdata.cardInfo).V_CORP_UPDATE = "NO COMPANY NAME";
 						break;
 					}
 				}
@@ -355,7 +357,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 社名と個人名が完全一致する場合は社名を削除(個人での登録のため)
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -374,7 +376,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 法人格の前後のホワイトスペースを除去
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -402,7 +404,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 海外住所は国名を除きAddress2に集約
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -423,7 +425,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 特定国名がAddress2の末尾に含まれる場合は削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -473,7 +475,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 「以下住所」に「●」が含まれる場合は、「社名」と「電話番号」の完全一致の場合はデータを修正する
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @param allFirstData
@@ -517,7 +519,7 @@ public class DataCleansingForMesagoUtil {
 	/**
 	 * 10.上記クレンジングの結果でも住所に「●」が含まれる場合、「メールアドレス」が完全であれば住所に関連するセルを削除し
 	 * データ自体は残す。「メールアドレス」が不完全であればデータ自体を削除する。
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -544,7 +546,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * Addr2,Addr3,Addr4の妥当性検証
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 */
@@ -599,7 +601,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 以下住所に含まれる全ての全半角スペース文字を削除。数字と数字の間のスペース文字は削除しない。
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -654,7 +656,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 海外住所フラグ
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return 海外住所であるか否かのブール値
@@ -665,7 +667,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 氏名が空値である場合には「見本市ご担当者様」に置換する
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -685,7 +687,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 不正なTEL番号／FAX番号を削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -720,9 +722,9 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 不正文字の除去
-	 * 
+	 *
 	 * 0もしくは-のみで構成される文字列である場合はnullを返却。それ以外は何もせず指定文字列を返却。
-	 * 
+	 *
 	 * @param value
 	 *            指定文字列
 	 * @return 処理後の文字列
@@ -756,9 +758,9 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 不正なメールアドレスを削除
-	 * 
+	 *
 	 * 「@」前に「●」が含まれる場合は削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -782,9 +784,9 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 不正なメールアドレスを削除
-	 * 
+	 *
 	 * 「@」以降に「●」が含まれる場合、「会社名」「住所」が完全一致するデータがある場合はデータを修復する。ない場合はセルデータを削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @param allFirstData
@@ -844,9 +846,9 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 不正なURLを削除
-	 * 
+	 *
 	 * 「@」が含まれる場合は削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -863,9 +865,9 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 不要な空白文字列を削除
-	 * 
+	 *
 	 * 1. 最後のスペース 　2. 連続スペースを1個の半角スペースに修正
-	 * 
+	 *
 	 * @param value
 	 *            編集対象文字列
 	 * @return 編集後の文字列
@@ -880,7 +882,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 全角文字列→半角文字列に変換
-	 * 
+	 *
 	 * @param str
 	 *            変換対象文字列
 	 * @param specialConvert
@@ -910,7 +912,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 特殊変換対象の全角記号であるか否かの検証
-	 * 
+	 *
 	 * @param pc
 	 *            対象文字
 	 * @return 検証結果のブール値
@@ -927,7 +929,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * isSpecialで定義された特殊記号に対する変換表を定義する
-	 * 
+	 *
 	 * @param pc
 	 *            対象文字
 	 * @return 変換後の文字
@@ -946,7 +948,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 重複氏名＋メールアドレスの探索
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @return 重複氏名＋メールアドレスのリスト
@@ -982,7 +984,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 重複氏名＋電話番号の探索
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @return 重複氏名＋電話番号のリスト
@@ -1018,7 +1020,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 重複氏名＋以下住所の探索
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @return 重複氏名＋以下住所のリスト
@@ -1054,7 +1056,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 削除フラグのマージ
-	 * 
+	 *
 	 * @param removeFlgs
 	 *            複数の削除フラグ
 	 * @return ブール型の削除フラグ
@@ -1070,7 +1072,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 重複データの削除
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @param nameAndEmail
@@ -1330,7 +1332,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 1. 住所が全て英語で入力されている国名が「Japan」であるデータを削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -1354,7 +1356,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 2. メアドと住所(ADDR3)の両方が不完全であるデータを削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -1393,10 +1395,10 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 3. 業種区分が「学生(BN14）」かつ会社名が空欄であるデータは削除
-	 * 
+	 *
 	 * 4. 業種区分が「学生(BN14）」で、社名に「大学」「専門学校」「学校法人」「（学）」を含み、「役職」の選択が「その他」
 	 * または未選択であるデータは削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -1429,7 +1431,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 5. 会社名が空欄でかつ業種区分が「その他」または未選択であるデータを削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -1449,7 +1451,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 6. 会社名に「大学」「専門学校」「学校法人」「（学）」を含み、「役職」の選択が「その他」または未選択であるデータを削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -1476,7 +1478,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 7. NG会社名を持つユーザーデータを削除
-	 * 
+	 *
 	 * @param userdata
 	 *            <b>MesagoUserDataDto<b/>
 	 * @return <b>MesagoUserDataDto<b/>
@@ -1515,7 +1517,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 指定した名刺情報が当日登録データであるか否かの検証
-	 * 
+	 *
 	 * @param cardInfo
 	 *            <b>MesagoCardDto</b>
 	 * @return 検証結果のブール値
@@ -1530,7 +1532,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 修正データをDB保存
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 * @param allData
@@ -1648,7 +1650,7 @@ public class DataCleansingForMesagoUtil {
 
 	/**
 	 * 2次納品データ生成用のsecondテーブルの全レコードを削除
-	 * 
+	 *
 	 * @param conn
 	 *            DBサーバーへの接続情報
 	 */

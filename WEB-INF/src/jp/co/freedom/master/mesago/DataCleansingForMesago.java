@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import jp.co.freedom.common.utilities.StringUtil;
 import jp.co.freedom.master.dto.mesago.MesagoUserDataDto;
 import jp.co.freedom.master.utilities.mesago.DataCleansingForMesagoUtil;
-import jp.co.freedom.master.utilities.mesago.MesagoConfig;
+import jp.co.freedom.master.utilities.mesago.osaka.OsakaConfig;
 
 /**
  * 【MESAGO】データクレンジング用サーブレット
@@ -50,9 +50,12 @@ public class DataCleansingForMesago extends HttpServlet {
 		Connection conn = null;
 		try {
 			// DBサーバーへの接続情報
+//			conn = DriverManager.getConnection(
+//					MesagoConfig.PSQL_URL_REMOTE_IP2014,
+//					MesagoConfig.PSQL_USER, MesagoConfig.PSQL_PASSWORD_REMOTE);
 			conn = DriverManager.getConnection(
-					MesagoConfig.PSQL_URL_REMOTE_IP2014,
-					MesagoConfig.PSQL_USER, MesagoConfig.PSQL_PASSWORD_REMOTE);
+					OsakaConfig.PSQL_URL_LOCAL_OSAKA2014, OsakaConfig.PSQL_USER,
+					OsakaConfig.PSQL_PASSWORD_LOCAL);
 			// 2データ生成用secondテーブル初期化
 			DataCleansingForMesagoUtil.initializedSecondTable(conn);
 			// 1次データ
