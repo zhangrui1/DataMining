@@ -11,6 +11,7 @@ public class OsakaConfig {
 	// ◆◆◆MySQL接続情報◆◆◆
 	/** DBサーバーURL */
 	public static final String PSQL_URL_LOCAL_OSAKA2014 = "jdbc:mysql://localhost:3306/osaka?useUnicode=true&characterEncoding=utf8";
+	public static final String PSQL_URL_LOCAL_IFFT2014 = "jdbc:mysql://localhost:3306/ifft2014?useUnicode=true&characterEncoding=utf8";
 
 	/** DBユーザー名 */
 	public static final String PSQL_USER = "root";
@@ -126,10 +127,10 @@ public class OsakaConfig {
 	public static final String YEAR = "2014";
 
 	/** 開催月 */
-	public static final String MONTH = "10";
+	public static final String MONTH = "11";
 
 	/** 開催日 */
-	public static final String[] DAYS = { "20", "21", "22" };
+	public static final String[] DAYS = { "26", "27", "28" };
 
 	/** 開場時間 */
 	public static final String HOUR = "10";

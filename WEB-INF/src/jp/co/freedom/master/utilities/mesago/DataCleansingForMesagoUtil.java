@@ -344,9 +344,7 @@ public class DataCleansingForMesagoUtil {
 			if (StringUtil.isNotEmpty(companyName)) {
 				for (String keyword : keywords) {
 					if (keyword.equals(companyName)) {
-//						((MesagoCardDto) userdata.cardInfo).V_CORP_UPDATE = null;
-						//2015/2/21 大阪の件から修正
-						((MesagoCardDto) userdata.cardInfo).V_CORP_UPDATE = "NO COMPANY NAME";
+						((MesagoCardDto) userdata.cardInfo).V_CORP_UPDATE = null;
 						break;
 					}
 				}

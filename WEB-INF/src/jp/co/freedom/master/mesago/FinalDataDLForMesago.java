@@ -55,7 +55,7 @@ public class FinalDataDLForMesago extends HttpServlet {
 //			conn = DriverManager.getConnection(MesagoConfig.PSQL_URL_REMOTE_IP2014,
 //					MesagoConfig.PSQL_USER, MesagoConfig.PSQL_PASSWORD_REMOTE);
 			conn = DriverManager.getConnection(
-					OsakaConfig.PSQL_URL_LOCAL_OSAKA2014, OsakaConfig.PSQL_USER,
+					OsakaConfig.PSQL_URL_LOCAL_IFFT2014, OsakaConfig.PSQL_USER,
 					OsakaConfig.PSQL_PASSWORD_LOCAL);
 			List<MesagoUserDataDto> userDataList = FinalDataDLForMesagoUtil
 					.getData(conn, mode);

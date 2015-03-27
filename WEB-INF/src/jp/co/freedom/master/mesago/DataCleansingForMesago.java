@@ -54,7 +54,7 @@ public class DataCleansingForMesago extends HttpServlet {
 //					MesagoConfig.PSQL_URL_REMOTE_IP2014,
 //					MesagoConfig.PSQL_USER, MesagoConfig.PSQL_PASSWORD_REMOTE);
 			conn = DriverManager.getConnection(
-					OsakaConfig.PSQL_URL_LOCAL_OSAKA2014, OsakaConfig.PSQL_USER,
+					OsakaConfig.PSQL_URL_LOCAL_IFFT2014, OsakaConfig.PSQL_USER,
 					OsakaConfig.PSQL_PASSWORD_LOCAL);
 			// 2データ生成用secondテーブル初期化
 			DataCleansingForMesagoUtil.initializedSecondTable(conn);
