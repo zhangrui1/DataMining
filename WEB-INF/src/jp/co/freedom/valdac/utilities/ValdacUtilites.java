@@ -1373,17 +1373,19 @@ public class ValdacUtilites {
 			String sql = "INSERT INTO  " + tablename + " VALUES (";
 			List<String> query = new ArrayList<String>();
 			Integer leng = csvData.length;
-			for (int nIndex = 1; nIndex <= 16; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_Kiki; nIndex++) { // [備忘]カラム追加時はカウンタ追加
 				query.add("?");
 			}
 			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
+			//kikiID
 			ps.setInt(++position, count++);
 			for (int nIndex =1; nIndex <= 12; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
 			ps.setString(++position, "");
+			//trkDate,updDate
 			for (int nIndex = 27; nIndex <= 28; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
@@ -1421,21 +1423,29 @@ public class ValdacUtilites {
 			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
+			//BuhinID
 			ps.setInt(++position, count++);
-			for (int nIndex =1; nIndex <= 8; nIndex++) {
+			//kikisysIdOld,kikiBunrui,kikiBunruiSeq,buhinKbn,buhinSeq,asbKbn
+			for (int nIndex =1; nIndex <= 6; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
-			ps.setString(++position, "");//hyojunSiyou
+			ps.setString(++position, csvData[17]);//buhinzuBikou
+			ps.setString(++position, csvData[8]);//buhinmei
+			ps.setString(++position, csvData[14]);//hyojunSiyou
+			//buhinMei,siyouKasyo,sizaiName,hiban,maker...
 			for (int nIndex = 9; nIndex <= 13; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
+			//sunpon,bikou
 			for (int nIndex = 15; nIndex <= 16; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
+			//suryo
 			for (int nIndex = 18; nIndex <= 18; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
 			ps.setString(++position, "");//imageId
+			//trkDate,updDate
 			for (int nIndex = 29; nIndex <= 30; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}

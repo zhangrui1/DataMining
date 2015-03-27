@@ -60,14 +60,14 @@ public class ValdacConfig {
 
 	/**テーブル項目数*/
 	public static final int Length_Kikisystem=36;
-	public static final int Length_Kiki=10;
-	public static final int Length_Buhin=10;
+	public static final int Length_Kiki=29;
+	public static final int Length_Buhin=31;
 	public static final int Length_KikisystemRelation=10;
 	public static final int Length_Image=10;
 
 	public static final int Length_New_Kikisystem=38;
-	public static final int Length_New_Kiki=10;
-	public static final int Length_New_Buhin=10;
+	public static final int Length_New_Kiki=16;
+	public static final int Length_New_Buhin=21;
 	public static final int Length_New_KikisystemRelation=10;
 	public static final int Length_New_Image=10;
 
