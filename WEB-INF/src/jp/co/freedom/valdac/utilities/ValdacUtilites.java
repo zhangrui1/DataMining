@@ -81,14 +81,43 @@ public class ValdacUtilites {
 				String[] result = new String[length + 1];
 //				result[0] = String.valueOf(event + nIndex);
 				for (int nTable = 0; nTable < rowLen; nTable++) {
-//					result[nTable] = toBigJp(row[nTable]);
-				    result[nTable] = zenkakuToHankaku(row[nTable]);
+					result[nTable] = toBigJp(row[nTable]);
+//				    result[nTable] = zenkakuToHankaku(row[nTable]);
 				}
 				for (int mTable = rowLen; mTable < length + 1; mTable++) {
 					result[mTable] = "";
 				}
-//				result[length] = "end";
+				result[length] = "end";
 				userDataList.add(result);
+			}
+		}
+		return userDataList;
+	}
+
+	/**
+	 * ユーザーデータのインスタンスを生成しリストに格納
+	 *
+	 * @param csvData
+	 *            CSVデータ
+	 * @param event
+	 *            イベント名
+	 * @return　ユーザデータのインスタンスを格納するリスト
+	 */
+	public static List<String[]> createInstanceCheckDataLength(List<String[]> csvData,
+			Integer event) {
+		List<String[]> userDataList = new ArrayList<String[]>();// ユーザーデータを保持するリスト
+		// CSVデータを1行ずつ処理0
+		for (int nIndex = 0; nIndex < csvData.size(); nIndex++) {
+			String[] row = csvData.get(nIndex);
+			String[] result = new String[event + 1];
+			if(row.length<=event){
+				for (int nTable = 0; nTable < row.length; nTable++) {
+					result[nTable] = toBigJp(row[nTable]);
+				}
+				result[event] = "end";
+				userDataList.add(result);
+			}else{
+				System.out.println(row[0]+" , "+row[1]);
 			}
 		}
 		return userDataList;
@@ -1270,14 +1299,13 @@ public class ValdacUtilites {
 		for (String[] csvData : csvDataList) {
 			String sql = "INSERT INTO  " + tablename + " VALUES (";
 			List<String> query = new ArrayList<String>();
-			Integer leng = csvData.length;
-			for (int nIndex = 1; nIndex <= 29; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_Kikisystem; nIndex++) { // [備忘]カラム追加時はカウンタ追加
 				query.add("?");
 			}
 			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
-			ps.setInt(++position, count++);
+			ps.setInt(++position, count++); //新機器システムID設定
 			//弁の顧客先
 			String locationCode=csvData[2];
 			String location=csvData[2];
@@ -1286,17 +1314,37 @@ public class ValdacUtilites {
 				if (Tempresult!=null)
 				location=Tempresult.kName;
 			}
-			ps.setString(++position,location);
-
+			ps.setString(++position,location);//弁の顧客先追加
+			//kcode,kikisysseq,vno,vnosub,benmeisyo
 			for (int nIndex =2; nIndex <= 6; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
+			//keisikiryaku~ryutai
 			for (int nIndex = 13; nIndex <= 30; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
-			for (int nIndex = 32; nIndex <= 35; nIndex++) {
+			//ics
+			ps.setString(++position, csvData[31]);
+			//futai
+			String futai=StringUtil.concatWithDelimit("", csvData[12],csvData[31],csvData[33]);
+			ps.setString(++position, futai);
+
+			//trkDate,updDate
+			for (int nIndex = 34; nIndex <= 35; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
+			//setBasyo,setKiki,setSetubi
+			for (int nIndex = 8; nIndex <= 10; nIndex++) {
+				ps.setString(++position, csvData[nIndex]);
+			}
+			//keitou
+			ps.setString(++position, csvData[11]);
+			//kougu1
+			ps.setString(++position, csvData[12]);
+			for (int nIndex = 2; nIndex <= 5; nIndex++) {
+				ps.setString(++position, "");
+			}
+
 			int result = ps.executeUpdate();
 			if (result == 0) {
 				return false;

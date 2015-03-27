@@ -51,6 +51,27 @@ public class ValdacConfig {
 	/** 東洋バルブ顧客データ*/
 	public static final String OUTPUT_KOKYAKU = "顧客データ変換後.txt";
 
+	/**テーブル名*/
+	public static final String TABLENAME_Kikisystem="kikisystem";
+	public static final String TABLENAME_Kiki="kiki";
+	public static final String TABLENAME_Buhin="buhin";
+	public static final String TABLENAME_KikisystemRelation="kikisystemrelation";
+	public static final String TABLENAME_Image="image";
+
+	/**テーブル項目数*/
+	public static final int Length_Kikisystem=36;
+	public static final int Length_Kiki=10;
+	public static final int Length_Buhin=10;
+	public static final int Length_KikisystemRelation=10;
+	public static final int Length_Image=10;
+
+	public static final int Length_New_Kikisystem=38;
+	public static final int Length_New_Kiki=10;
+	public static final int Length_New_Buhin=10;
+	public static final int Length_New_KikisystemRelation=10;
+	public static final int Length_New_Image=10;
+
+
 	public static boolean ENQUOTE_BY_DOUBLE_QUOTATION = false;
 	/** 最初の行がヘッダー行であるか否かのブール値 */
 	public static boolean REMOVE_HEADER_RECORD = false;

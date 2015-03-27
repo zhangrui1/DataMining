@@ -125,6 +125,18 @@ th.specalt {
 				</td>
 			</tr>
 			<tr>
+				<td class="alt"><div>w01 弁機器システム表変更</div> <br /></td>
+				<td>
+					<form name="form1" action="/DataMining/ChangeKikisystem"
+						enctype="multipart/form-data" method="post">
+						<div>
+							<input type="file" name="files" multiple /><br /> <input
+								type="submit" value="作成" id="goHomeBtn1" /><br />
+						</div>
+					</form>
+				</td>
+			</tr>
+			<tr>
 				<td class="alt"><div>k04点検機器表変換</div> <br /></td>
 				<td>
 					<form id="form1_1" name="form1_1"
@@ -136,42 +148,6 @@ th.specalt {
 								<option value="match">変換できた</option>
 								<option value="unmatch">変換できない</option>
 							</select>
-							<small>顧客コード</small>
-							 <select name="Start">
-								<option value="0">0~5万</option>
-								<option value="5">5~10万</option>
-								<option value="10">10~15万</option>
-								<option value="15">15~20万</option>
-								<option value="20">20-25万</option>
-								<option value="25">25~30万</option>
-								<option value="30">30~35万</option>
-								<option value="35">35-40万</option>
-								<option value="40">40-45万</option>
-								<option value="45">45-50万</option>
-								<option value="50">50-55万</option>
-								<option value="55">55-60万</option>
-								<option value="60">60-65万</option>
-								<option value="65">65-70万</option>
-								<option value="70">70-75万</option>
-								<option value="75">75-80万</option>
-								<option value="80">80-85万</option>
-								<option value="85">85-90万</option>
-								<option value="90">90-95万</option>
-								<option value="95">95-100万</option>
-								<option value="100">100-105万</option>
-								<option value="105">105-110万</option>
-								<option value="110">110-115万</option>
-								<option value="115">115-120万</option>
-								<option value="120">120-125万</option>
-								<option value="125">125-130万</option>
-								<option value="130">130-135万</option>
-								<option value="135">135-140万</option>
-								<option value="140">140-145万</option>
-								<option value="145">145-150万</option>
-								<option value="150">150-155万</option>
-								<option value="155">155-160万</option>
-							</select>
-							<small>DLデータ</small>
 						</div>
 						<div>
 							<input type="submit" value="作成" />

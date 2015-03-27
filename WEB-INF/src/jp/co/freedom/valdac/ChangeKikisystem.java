@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -18,20 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import jp.co.freedom.common.utilities.Config;
 import jp.co.freedom.common.utilities.FileUtil;
-import jp.co.freedom.common.utilities.StringUtil;
 import jp.co.freedom.master.dto.valdac.ValdacUserDataDto;
 import jp.co.freedom.valdac.utilities.ValdacConfig;
 import jp.co.freedom.valdac.utilities.ValdacUtilites;
 
 /**
- * 【固定データ長】棚卸表データのインポート用サーブレット
- *
- * @author フリーダム・グループ
  *
  */
-@WebServlet(name = "InsertIntoTable", urlPatterns = { "/InsertIntoTable" })
+@WebServlet(name = "ChangeKikisystem", urlPatterns = { "/ChangeKikisystem" })
 @MultipartConfig(fileSizeThreshold = 5000000, maxFileSize = 10000000)
-public class InsertIntoTable extends HttpServlet {
+public class ChangeKikisystem extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -46,25 +41,7 @@ public class InsertIntoTable extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		// テーブル名
-		Object tableObj = request.getParameter("tablename");
-		String tablename = (String) tableObj;
-		assert StringUtil.isNotEmpty(tablename);
-
-
-		// アップロードディレクトリの絶対パス
-		String uploadDirPath = request.getServletContext().getRealPath("")
-				+ File.separator + Config.UPLOAD_DIR;
-		// アップロードファイルの削除
-		FileUtil.delete(uploadDirPath);
-		// アップロードファイルの保存
-		FileUtil.saveUploadFiles(request, Config.UPLOAD_DIR);
-		// CSVデータのロード
-		List<String[]> csvData = FileUtil.loadCsv(uploadDirPath, false,true,
-				ValdacConfig.DELIMITER, ValdacConfig.ALLOWS_EXTENSIONS);
-		assert csvData != null;
 		Connection conn = null;
-
 		try {
 			// JDBCドライバーのロード
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -72,33 +49,45 @@ public class InsertIntoTable extends HttpServlet {
 			conn = DriverManager.getConnection(ValdacConfig.PSQL_URL,
 					ValdacConfig.PSQL_USER, ValdacConfig.PSQL_PASSWORD);
 
-						// 1.顧客先の全データ
+			// ｔｘｔファイルを選択し、データを読み取る
+			// アップロードディレクトリの絶対パス
+			String uploadDirPath = request.getServletContext().getRealPath("")
+					+ File.separator + Config.UPLOAD_DIR;
+			// アップロードファイルの削除
+			FileUtil.delete(uploadDirPath);
+			// アップロードファイルの保存
+			FileUtil.saveUploadFiles(request, Config.UPLOAD_DIR);
+			// CSVデータのロード
+			List<String[]> csvData = FileUtil.loadCsvSavingFileName(
+					uploadDirPath, ValdacConfig.ENQUOTE_BY_DOUBLE_QUOTATION,
+					ValdacConfig.REMOVE_HEADER_RECORD, ValdacConfig.DELIMITER,
+					ValdacConfig.ALLOWS_EXTENSIONS);
+			assert csvData != null;
+			// アップロードファイルの削除
+			FileUtil.delete(uploadDirPath);
+
+			// ユーザーデータを保持するリスト
+			List<String[]> userDataList = ValdacUtilites
+					.createInstanceCheckDataLength(csvData,ValdacConfig. Length_Kikisystem);
+			assert userDataList != null;
+
+			// 1.顧客先の全データ
 			List<ValdacUserDataDto> allLocationIdData = ValdacUtilites
 					.getKokyakuAfterData(conn);
-			// 機器システムの全データMap
+			//顧客情報をMapに変更
 			Map<String, ValdacUserDataDto> allLocationDataMap = ValdacUtilites
 					.getallKokyakuDataMap(allLocationIdData);
+			// kikisystemテーブルに保存
+			ValdacUtilites.resetDB(conn, ValdacConfig.TABLENAME_Kikisystem); // DBの初期化
+			ValdacUtilites.importDataKikiSys(conn, userDataList,
+					ValdacConfig.TABLENAME_Kikisystem, allLocationDataMap); // 機器システムテーブル
 
-
-
-			ValdacUtilites.resetDB(conn,tablename); // DBの初期化
-			if("kikisystem".equals(tablename)){
-				ValdacUtilites.importDataKikiSys(conn, csvData,tablename,allLocationDataMap); // 機器システムテーブル
-			}else if("kiki".equals(tablename)){
-				ValdacUtilites.importDataKiki(conn, csvData,tablename); // 機器テーブル
-			}else if("buhin".equals(tablename)){
-				ValdacUtilites.importDataBuhi(conn, csvData,tablename); // 部品テーブル
-			}else if("kouji".equals(tablename)){
-				ValdacUtilites.importDataKouji(conn, csvData,tablename,allLocationDataMap); // 部品テーブル
-			}
-
-
-			request.setAttribute("backURL", "./html/valdac/valdac.html");
-			request.setAttribute("result", "インポート処理が終了しました。");
-			// JSPにフォワード
-			RequestDispatcher dispatcher = request
-					.getRequestDispatcher("/src/jsp/prompt/dbOperation.jsp");
-			dispatcher.forward(request, response);
+			// // マッチングデータのダウンロード
+			// if (!ValdacUtilites.downLoad(request, response,
+			// ValdacConfig.OUTPUT_FILENAME, userDataList,
+			// Config.DELIMITER_TAB)) {
+			// System.out.println("Error: Failed download CSV file");
+			// }
 
 		} catch (InstantiationException e) {
 			e.printStackTrace();
