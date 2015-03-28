@@ -57,6 +57,9 @@ public class ValdacConfig {
 	public static final String TABLENAME_Buhin="buhin";
 	public static final String TABLENAME_KikisystemRelation="kikisystemrelation";
 	public static final String TABLENAME_Image="image";
+	public static final String TABLENAME_Kouji="kouji";
+	public static final String TABLENAME_Tempkouji="tempkouji";
+	public static final String TABLENAME_TenkenRireki="tenkenrireki";
 
 	/**テーブル項目数*/
 	public static final int Length_Kikisystem=36;
@@ -64,12 +67,16 @@ public class ValdacConfig {
 	public static final int Length_Buhin=31;
 	public static final int Length_KikisystemRelation=10;
 	public static final int Length_Image=10;
+	public static final int Length_Kouji=20;
+	public static final int Length_TenkenRireki=16;
 
 	public static final int Length_New_Kikisystem=38;
 	public static final int Length_New_Kiki=16;
 	public static final int Length_New_Buhin=21;
 	public static final int Length_New_KikisystemRelation=10;
 	public static final int Length_New_Image=10;
+	public static final int Length_New_Kouji=15;
+	public static final int Length_New_TenkenRireki=13;
 
 
 	public static boolean ENQUOTE_BY_DOUBLE_QUOTATION = false;

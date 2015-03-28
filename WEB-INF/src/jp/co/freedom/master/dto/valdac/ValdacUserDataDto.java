@@ -37,8 +37,12 @@ public class ValdacUserDataDto  {
 	/** 工事ID */
 	public String koujiIDOld;
 
+	/** 工事関係表ID */
+	public String koujiRelationId;
+
 //	/** 点検機器用 */
 	public String tenkenSisin;
+	public String tenkenDate;
 	public String tenkenRank;
 	public String tenkenNaiyo;
 	public String gyosya;
@@ -51,6 +55,7 @@ public class ValdacUserDataDto  {
 
 	public String KanryoFlg;
 	public String tenkenNendo;
+	public String tenkenBikou;
 
 
 //	/** 懸案事項用 */

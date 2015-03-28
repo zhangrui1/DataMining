@@ -1417,7 +1417,7 @@ public class ValdacUtilites {
 			String sql = "INSERT INTO  " + tablename + " VALUES (";
 			List<String> query = new ArrayList<String>();
 			Integer leng = csvData.length;
-			for (int nIndex = 1; nIndex <= 21; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_Buhin; nIndex++) { // [備忘]カラム追加時はカウンタ追加
 				query.add("?");
 			}
 			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
@@ -1477,7 +1477,7 @@ public class ValdacUtilites {
 			String sql = "INSERT INTO  " + tablename + " VALUES (";
 			List<String> query = new ArrayList<String>();
 			Integer leng = csvData.length;
-			for (int nIndex = 1; nIndex <= 15; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_Kouji; nIndex++) { // [備忘]カラム追加時はカウンタ追加
 				query.add("?");
 			}
 			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
@@ -1487,11 +1487,11 @@ public class ValdacUtilites {
 			for (int nIndex =3; nIndex <= 10; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
-
+			//gyosyaRyakuA
 			for (int nIndex = 15; nIndex <= 15; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
-
+            //location
 			for (int nIndex = 16; nIndex <= 16; nIndex++) {
 //				String location=StringUtil.concatWithDelimit("",csvData[1],csvData[2]);
 				String locationCode=csvData[1];
@@ -1503,10 +1503,10 @@ public class ValdacUtilites {
 				}
 				ps.setString(++position,location);
 			}
-			ps.setString(++position, "1");//status
+			ps.setString(++position, csvData[13]);//status
 			ps.setString(++position, "");//person
-			ps.setString(++position, "2014/12/01");//person
-			ps.setString(++position, "2014/12/01");//person
+			ps.setString(++position, "2015/04/01");//person
+			ps.setString(++position, "2015/04/01");//person
 
 			int result = ps.executeUpdate();
 			if (result == 0) {
@@ -1518,6 +1518,97 @@ public class ValdacUtilites {
 		}
 		return true;
 	}
+
+	/**
+	 *工事作業用テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLException
+	 */
+	public static boolean importDataKoujiTemp(Connection conn,
+			List<String[]> csvDataList, String tablename) throws SQLException {
+		int count = 60000000;
+		for (String[] csvData : csvDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+			Integer leng = csvData.length;
+			for (int nIndex = 1; nIndex <= 2; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+			ps.setInt(++position, count++);
+			String koujiOldId=StringUtil.concatWithDelimit("", csvData[1],csvData[2]);
+			ps.setString(++position, koujiOldId);//koujiOldId
+
+
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
+
+	/**
+	 *点検履歴機器テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLException
+	 */
+	public static boolean importDataTenkenKiki(Connection conn,
+			List<ValdacUserDataDto> allKoujiRirekiDataList, String tablename) throws SQLException {
+		int count = 1;
+		for (ValdacUserDataDto koujiRirekiDataList : allKoujiRirekiDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_TenkenRireki; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+			//ID
+			ps.setInt(++position, count++);
+			//koujiId
+			ps.setString(++position,koujiRirekiDataList.koujiID);
+			ps.setString(++position,koujiRirekiDataList.KikiSysId);
+			ps.setString(++position,koujiRirekiDataList.kikiID);
+			ps.setString(++position,koujiRirekiDataList.tenkenDate);
+			ps.setString(++position,koujiRirekiDataList.tenkenNendo);
+			ps.setString(++position,koujiRirekiDataList.tenkenRank);
+			ps.setString(++position,koujiRirekiDataList.tenkenNaiyo);
+			ps.setString(++position,koujiRirekiDataList.tenkenKekka0);
+			ps.setString(++position,koujiRirekiDataList.tenkenBikou);
+			ps.setString(++position,koujiRirekiDataList.KanryoFlg);
+			ps.setString(++position,koujiRirekiDataList.tenkenDate);
+			ps.setString(++position,koujiRirekiDataList.tenkenDate);
+
+
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
+
 
 	/**
 	 *懸案テーブルに CSVデータのインポート
@@ -1577,7 +1668,7 @@ public class ValdacUtilites {
 	public static List<ValdacUserDataDto> getKikiSysIdData(Connection conn)
 			throws SQLException {
 		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
-		String sql = "SELECT * FROM kikisys;";
+		String sql = "SELECT * FROM kikisystem;";
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery(sql);
 		while (rs.next()) {
@@ -1725,21 +1816,18 @@ public class ValdacUtilites {
 	public static List<ValdacUserDataDto> getKoujiIdData(Connection conn)
 			throws SQLException {
 		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
-		String sql = "SELECT * FROM kouji;";
+		String sql = "SELECT * FROM tempkouji;";
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery(sql);
 		while (rs.next()) {
 			ValdacUserDataDto userdata = new ValdacUserDataDto();
 			ValdacCardDto cardInfo = new ValdacCardDto(); // 名刺情報DTO
 			ValdacQuestionDto questionInfo = new ValdacQuestionDto(); // アンケート情報DTO
-
-			userdata.id = rs.getString("id");
 			// 工事新ID
+			userdata.id = rs.getString("id");
+			// 工事OldID
+			userdata.koujiIDOld = rs.getString("koujiidOld");
 			userdata.koujiID = rs.getString("id");
-			// 工事旧ID
-			userdata.koujiIDOld = rs.getString("location");
-
-
 			userDataList.add(userdata);
 		}
 		if (rs != null) {
@@ -2127,6 +2215,54 @@ public class ValdacUtilites {
 	}
 
 	/**
+	 * 工事の点検機器履歴
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> changeToUserDataList(List<String[]> csvData)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+
+		int count=0;
+		for (String[] TempcsvData : csvData){
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			String KCode=StringUtil.convertFixedLengthData(TempcsvData[7],6,"0");
+			String KjSeq=StringUtil.convertFixedLengthData(TempcsvData[8],3,"0");
+			String Kikisys=StringUtil.convertFixedLengthData(TempcsvData[1],11,"0");
+			String KikiBunrui=TempcsvData[2];
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(TempcsvData[3],2,"0");
+
+//			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+            userdata.id=Integer.toString(count);
+			// 工事旧ID
+			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+//			//点検結果部分
+
+			userdata.tenkenRank=toBigJp(TempcsvData[6]);
+			userdata.tenkenNaiyo=toBigJp(TempcsvData[14]);
+			userdata.tenkenKekka0=toBigJp(TempcsvData[13]);
+            userdata.tenkenNendo=toBigJp(TempcsvData[5]);
+            userdata.KanryoFlg=toBigJp(TempcsvData[15]);
+
+			userDataList.add(userdata);
+		}
+
+		return userDataList;
+	}
+
+	/**
 	 * 【DBアクセスに依らずにユーザー情報を検索するためにMAPを生成する
 	 *
 	 * @param userDataList
@@ -2190,6 +2326,13 @@ public class ValdacUtilites {
 
 		for (ValdacUserDataDto userdata : userDataList) {
 			Map<String, ValdacBuhiDto> kiki = userdata.kikiList;
+			//kikisysIDのみ行
+			List<String> colsKikisystem = new ArrayList<String>();
+			colsKikisystem.add(String.valueOf(count++));
+			colsKikisystem.add(String.valueOf(userdata.id));
+			colsKikisystem.add(String.valueOf("0"));
+			colsKikisystem.add(String.valueOf("0"));
+			FileUtil.writer(colsKikisystem, writer, dim); // 1レコード分のデータ書き出し
 
 			if (kiki!=null){
 				Iterator kikiSort = kiki.entrySet().iterator();
@@ -2199,6 +2342,14 @@ public class ValdacUtilites {
 					ValdacBuhiDto buhinList=(ValdacBuhiDto)entry.getValue();
 					//部品部分
 					if (buhinList.buhinIDList.size()>0) {
+						//kikisystem,kikiのみの行
+						List<String> colsKiki = new ArrayList<String>();
+						colsKiki.add(String.valueOf(count++));
+						colsKiki.add(StringUtil.enquote(userdata.id));
+						colsKiki.add(StringUtil.enquote(keyName));
+						colsKiki.add(StringUtil.enquote("0"));
+						FileUtil.writer(colsKiki, writer, dim); // 1レコード分のデータ書き出し
+
 						for (int nIndex = 0; nIndex < buhinList.buhinIDList.size(); nIndex++) {
 									List<String> cols = new ArrayList<String>();
 									cols.add(String.valueOf(count++));
@@ -2213,7 +2364,7 @@ public class ValdacUtilites {
 						cols.add(String.valueOf(count++));
 						cols.add(StringUtil.enquote(userdata.id));
 						cols.add(StringUtil.enquote(keyName));
-						cols.add(StringUtil.enquote(""));
+						cols.add(StringUtil.enquote("0"));
 						FileUtil.writer(cols, writer, dim); // 1レコード分のデータ書き出し
 					}
 				}
