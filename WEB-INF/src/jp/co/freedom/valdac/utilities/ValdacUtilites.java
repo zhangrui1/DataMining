@@ -1065,8 +1065,8 @@ public class ValdacUtilites {
 			if (userDataList!=null){
 				for (ValdacUserDataDto userdata : userDataList) {
 					List<String> cols = new ArrayList<String>();
-					cols.add(String.valueOf(count++));
-					cols.add(StringUtil.enquote("0"));
+					cols.add(StringUtil.enquote(userdata.id));
+					cols.add(StringUtil.enquote(userdata.koujiID));
 					cols.add(StringUtil.enquote(userdata.koujiIDOld));
 					cols.add(StringUtil.enquote(userdata.KikiSysId));
 					cols.add(StringUtil.enquote(userdata.KikiSysIdOld));
@@ -1611,6 +1611,63 @@ public class ValdacUtilites {
 
 
 	/**
+	 *懸案テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLException
+	 */
+	public static boolean importDataToKenanTable(Connection conn,
+			List<ValdacUserDataDto> allKenanDataList, String tablename) throws SQLException {
+
+		for (ValdacUserDataDto kenan : allKenanDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_Kenan; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+			//ID
+			ps.setInt(++position,Integer.parseInt(kenan.id));
+			//koujiId
+			ps.setString(++position,kenan.koujiID);
+			ps.setString(++position,kenan.KikiSysId);
+			ps.setString(++position,kenan.id);
+			ps.setString(++position,kenan.kikiID);
+			ps.setString(++position,kenan.hakkenDate);
+			ps.setString(++position,kenan.taisakuDate);
+			ps.setString(++position,kenan.taiouFlg);
+			ps.setString(++position,kenan.jisyo);
+			ps.setString(++position,kenan.buhin);
+			ps.setString(++position,kenan.gensyo);
+			ps.setString(++position,kenan.youin);
+			ps.setString(++position,kenan.taisaku);
+			ps.setString(++position,kenan.hakkenJyokyo);
+			ps.setString(++position,kenan.syotiNaiyou);
+			ps.setString(++position,kenan.trkDate);
+			ps.setString(++position,kenan.updDate);
+
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
+
+
+
+
+	/**
 	 *工事関連表テーブルに CSVデータのインポート
 	 *
 	 * @param conn
@@ -1623,8 +1680,15 @@ public class ValdacUtilites {
 	public static boolean importDataKoujiRelation(Connection conn,
 			List<ValdacUserDataDto> allKoujiRirekiDataList, String tablename) throws SQLException {
 		int count = 1;
+		String sql = "DELETE FROM  " + tablename + " where id>60000 and id<62000 ;";
+		PreparedStatement ps1 = conn.prepareStatement(sql);
+		boolean result1 = ps1.execute();
+		if (ps1 != null) {
+			ps1.close();
+		}
+
 		for (ValdacUserDataDto koujiRirekiDataList : allKoujiRirekiDataList) {
-			String sql = "INSERT INTO  " + tablename + " VALUES (";
+		   sql = "INSERT INTO  " + tablename + " VALUES (";
 			List<String> query = new ArrayList<String>();
 
 			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_KoujiRelation; nIndex++) { // [備忘]カラム追加時はカウンタ追加
@@ -1634,7 +1698,8 @@ public class ValdacUtilites {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
 			//ID
-			ps.setInt(++position, count++);
+//			ps.setInt(++position, count++);
+			ps.setInt(++position,Integer.parseInt(koujiRirekiDataList.id));
 			//koujiId
 			ps.setString(++position,koujiRirekiDataList.koujiID);
 			ps.setString(++position,koujiRirekiDataList.KikiSysId);
@@ -2354,6 +2419,64 @@ public class ValdacUtilites {
 		return userDataList;
 	}
 
+	/**
+	 * kenanをユーザに変更
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> changeKenanToUserDataList(List<String[]> csvData)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+
+		int count=60000;
+		for (String[] TempcsvData : csvData){
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			String Kikisys=StringUtil.convertFixedLengthData(TempcsvData[1],11,"0");
+			String KikiBunrui=TempcsvData[2];
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(TempcsvData[3],2,"0");
+
+            userdata.id=Integer.toString(count);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+			//懸案部分
+
+			userdata.hakkenDate=toBigJp(TempcsvData[5]);
+			userdata.trkDate=toBigJp(TempcsvData[5]);
+			userdata.taisakuDate=toBigJp(TempcsvData[6]);
+
+            //taiouFlg 1➡対応 0➡未対応
+            if("1".equals(toBigJp(TempcsvData[7]))){
+            	userdata.taiouFlg="対応";
+            	userdata.updDate=toBigJp(TempcsvData[6]);
+            }else{
+            	userdata.taiouFlg="未対応";
+            	userdata.updDate=toBigJp(TempcsvData[5]);
+            }
+            userdata.jisyo=toBigJp(TempcsvData[8]);
+            userdata.buhin=toBigJp(TempcsvData[9]);
+            userdata.gensyo=toBigJp(TempcsvData[10]);
+            userdata.youin=toBigJp(TempcsvData[11]);
+            userdata.taisaku=toBigJp(TempcsvData[12]);
+            userdata.hakkenJyokyo=toBigJp(TempcsvData[13]);
+            userdata.syotiNaiyou=toBigJp(TempcsvData[14]);
+            userdata.koujiID="0";
+            userdata.koujiRelationId=Integer.toString(count);
+
+			userDataList.add(userdata);
+		}
+
+		return userDataList;
+	}
 	/**
 	 * 【DBアクセスに依らずにユーザー情報を検索するためにMAPを生成する
 	 *
