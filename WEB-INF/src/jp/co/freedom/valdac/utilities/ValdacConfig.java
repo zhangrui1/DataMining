@@ -60,6 +60,8 @@ public class ValdacConfig {
 	public static final String TABLENAME_Kouji="kouji";
 	public static final String TABLENAME_Tempkouji="tempkouji";
 	public static final String TABLENAME_TenkenRireki="tenkenrireki";
+	public static final String TABLENAME_KoujiRelation="koujirelation";
+
 
 	/**テーブル項目数*/
 	public static final int Length_Kikisystem=36;
@@ -77,6 +79,7 @@ public class ValdacConfig {
 	public static final int Length_New_Image=10;
 	public static final int Length_New_Kouji=15;
 	public static final int Length_New_TenkenRireki=13;
+	public static final int Length_New_KoujiRelation=4;
 
 
 	public static boolean ENQUOTE_BY_DOUBLE_QUOTATION = false;

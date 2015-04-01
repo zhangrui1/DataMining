@@ -1503,10 +1503,10 @@ public class ValdacUtilites {
 				}
 				ps.setString(++position,location);
 			}
-			ps.setString(++position, csvData[13]);//status
+			ps.setString(++position, csvData[14]);//status
 			ps.setString(++position, "");//person
-			ps.setString(++position, "2015/04/01");//person
-			ps.setString(++position, "2015/04/01");//person
+			ps.setString(++position, csvData[6]);//trkDate
+			ps.setString(++position, csvData[7]);//updDate
 
 			int result = ps.executeUpdate();
 			if (result == 0) {
@@ -1609,6 +1609,47 @@ public class ValdacUtilites {
 		return true;
 	}
 
+
+	/**
+	 *工事関連表テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLException
+	 */
+	public static boolean importDataKoujiRelation(Connection conn,
+			List<ValdacUserDataDto> allKoujiRirekiDataList, String tablename) throws SQLException {
+		int count = 1;
+		for (ValdacUserDataDto koujiRirekiDataList : allKoujiRirekiDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_KoujiRelation; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+			//ID
+			ps.setInt(++position, count++);
+			//koujiId
+			ps.setString(++position,koujiRirekiDataList.koujiID);
+			ps.setString(++position,koujiRirekiDataList.KikiSysId);
+			ps.setString(++position,koujiRirekiDataList.kikiID);
+
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
 
 	/**
 	 *懸案テーブルに CSVデータのインポート
@@ -2035,6 +2076,57 @@ public class ValdacUtilites {
 		return userDataList;
 	}
 
+	/**
+	 * 工事の点検機器 点検ランクを取得
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @return　全ての当日登録データ
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public static List<ValdacUserDataDto> getTenkenkikiRank(Connection conn)
+			throws SQLException, IOException {
+
+		List<ValdacUserDataDto> userDataList = new ArrayList<ValdacUserDataDto>();
+		String sql="SELECT * FROM k04tenkenkiki ;";
+
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery(sql);
+		int count=1;
+		while (rs.next()) {
+			count=count+1;
+			ValdacUserDataDto userdata = new ValdacUserDataDto();
+
+			String KCode=StringUtil.convertFixedLengthData(rs.getString("k04KCode"),6,"0");
+			String KjSeq=StringUtil.convertFixedLengthData(rs.getString("k04KjSeq"),3,"0");
+			String Kikisys=StringUtil.convertFixedLengthData(rs.getString("k04KikiSysId"),11,"0");
+			String KikiBunrui=rs.getString("k04KikiBunrui");
+			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k04KikiBunruiSeq"),2,"0");
+
+			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+
+			// 工事旧ID
+			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
+			// 弁旧ID
+			userdata.KikiSysIdOld = Kikisys;
+			// kiki旧ID
+			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
+
+			//点検結果部分
+
+			userdata.tenkenNaiyo=toBigJp(rs.getString("k04TenkenNaiyo"));
+
+			userDataList.add(userdata);
+		}
+		if (rs != null) {
+			rs.close();
+		}
+		if (ps != null) {
+			ps.close();
+		}
+		return userDataList;
+	}
 
 	/**
 	 * 懸案事項
@@ -2251,9 +2343,9 @@ public class ValdacUtilites {
 //			//点検結果部分
 
 			userdata.tenkenRank=toBigJp(TempcsvData[6]);
-			userdata.tenkenNaiyo=toBigJp(TempcsvData[14]);
 			userdata.tenkenKekka0=toBigJp(TempcsvData[13]);
             userdata.tenkenNendo=toBigJp(TempcsvData[5]);
+            userdata.tenkenBikou=toBigJp(TempcsvData[14]);
             userdata.KanryoFlg=toBigJp(TempcsvData[15]);
 
 			userDataList.add(userdata);
@@ -2444,6 +2536,22 @@ public class ValdacUtilites {
 				for (ValdacUserDataDto userData : AllDatalist) {
 					if (StringUtil.isNotEmpty(userData.id)) {
 						map.put(userData.koujiIDOld, userData);
+					}
+				}
+				return map;
+			}
+
+		/**
+		 *
+		 * 点検機器　工事IDをKey
+		 *
+		 * */
+			public static Map<String, ValdacUserDataDto> getallTenkenkikiRankMap(
+					List<ValdacUserDataDto> AllDatalist) {
+				Map<String, ValdacUserDataDto> map = new HashMap<String, ValdacUserDataDto>();
+				for (ValdacUserDataDto userData : AllDatalist) {
+					if (StringUtil.isNotEmpty(userData.id)) {
+						map.put(userData.id, userData);
 					}
 				}
 				return map;

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import jp.co.freedom.common.utilities.Config;
 import jp.co.freedom.common.utilities.FileUtil;
+import jp.co.freedom.common.utilities.StringUtil;
 import jp.co.freedom.master.dto.valdac.ValdacUserDataDto;
 import jp.co.freedom.valdac.utilities.ValdacConfig;
 import jp.co.freedom.valdac.utilities.ValdacUtilites;
@@ -100,6 +101,12 @@ public class ChangeTenkenRireki extends HttpServlet {
 			// 工事の全データMap
 			Map<String, ValdacUserDataDto> allKoujiDataListMap = ValdacUtilites
 					.getallKoujiDataListMap(allKoujiDataList);
+			// 4.点検機器のデータを取得
+			List<ValdacUserDataDto> allTenkenkikiRank = ValdacUtilites
+					.getTenkenkikiRank(conn);
+			// 点検機器の全データMap
+			Map<String, ValdacUserDataDto> allTenkenkikiRankMap = ValdacUtilites
+					.getallTenkenkikiRankMap(allTenkenkikiRank);
 
 			for (ValdacUserDataDto userData : allKoujiRirekiDataList) {
 
@@ -134,13 +141,27 @@ public class ChangeTenkenRireki extends HttpServlet {
 				if((userData.koujiID==null) ||(userData.KikiSysId==null) || (userData.kikiID==null) ){
 					allNoMatchKoujiRirekiDataList.add(userData);
 				}
+				//tenkennaiyoを取得
+				String tenkenkiki=StringUtil.concatWithDelimit("",userData.koujiIDOld,userData.kikiIDOld);
+				ValdacUserDataDto tmTenkenRank=allTenkenkikiRankMap.get(tenkenkiki);
+				if (tmTenkenRank != null) {
+					userData.tenkenNaiyo = tmTenkenRank.tenkenNaiyo;
+				} else {
+					System.out.println("該点検機器のID：" + tenkenkiki);
+				}
+
 			}
 
 			//点検ランク、点検内容を追加
-			// kikisystemテーブルに保存
+			//tenkenRirekiテーブルに保存
 			ValdacUtilites.resetDB(conn, ValdacConfig.TABLENAME_TenkenRireki); // DBの初期化
 			ValdacUtilites.importDataTenkenKiki(conn, allKoujiRirekiDataList,
 			ValdacConfig.TABLENAME_TenkenRireki); // 点検機器テーブル
+
+			// koujiRelationテーブルに保存
+			ValdacUtilites.resetDB(conn, ValdacConfig.TABLENAME_KoujiRelation); // DBの初期化
+			ValdacUtilites.importDataKoujiRelation(conn, allKoujiRirekiDataList,
+			ValdacConfig.TABLENAME_KoujiRelation); // koujiRelationテーブル
 
 			if (!ValdacUtilites.downLoadTenkenRireki(request, response,
 					ValdacConfig.OUTPUT_TENKENRIREKI, allKoujiRirekiDataList,
