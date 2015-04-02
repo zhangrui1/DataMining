@@ -1334,9 +1334,10 @@ public class ValdacUtilites {
 				ps.setString(++position, csvData[nIndex]);
 			}
 			//setBasyo,setKiki,setSetubi
-			for (int nIndex = 8; nIndex <= 10; nIndex++) {
-				ps.setString(++position, csvData[nIndex]);
-			}
+			ps.setString(++position, csvData[10]);
+			ps.setString(++position, csvData[9]);
+			ps.setString(++position, csvData[8]);
+
 			//keitou
 			ps.setString(++position, csvData[11]);
 			//kougu1
