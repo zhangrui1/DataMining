@@ -1485,13 +1485,33 @@ public class ValdacUtilites {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
 			ps.setInt(++position, count++);
-			for (int nIndex =3; nIndex <= 10; nIndex++) {
+			for (int nIndex =3; nIndex <= 4; nIndex++) {
+				ps.setString(++position, csvData[nIndex]);
+			}
+
+			//kjkb工事区分
+			String kjkbn=StringUtil.concatWithDelimit("", csvData[5]);
+			if("1".equals(kjkbn)){
+                 ps.setString(++position, "定期検査");//kjkb
+			}else if("2".equals(kjkbn)){
+				ps.setString(++position, "定期自主検査");//kjkb
+			}else if("3".equals(kjkbn)){
+				ps.setString(++position, "その他");//kjkb
+			}else{
+				ps.setString(++position, "");//kjkb
+			}
+
+			for (int nIndex =6; nIndex <= 10; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);
 			}
 			//gyosyaRyakuA
-			for (int nIndex = 15; nIndex <= 15; nIndex++) {
-				ps.setString(++position, csvData[nIndex]);
+			String gyousya=StringUtil.concatWithDelimit("", csvData[15]);
+			if("TVS".equals(gyousya)){
+                 ps.setString(++position, "東洋バルブ製造所");//gyosyaRyakuA
+			}else{
+				ps.setString(++position, "不明");//gyosyaRyakuA
 			}
+
             //location
 			for (int nIndex = 16; nIndex <= 16; nIndex++) {
 //				String location=StringUtil.concatWithDelimit("",csvData[1],csvData[2]);
@@ -1504,7 +1524,19 @@ public class ValdacUtilites {
 				}
 				ps.setString(++position,location);
 			}
-			ps.setString(++position, csvData[14]);//status
+
+			String statusFlg=StringUtil.concatWithDelimit("", csvData[13],csvData[14]);
+			if("00".equals(statusFlg)){
+                 ps.setString(++position, "企画中");//status
+			}else if("01".equals(statusFlg)){
+				ps.setString(++position, "施工中");//status
+			}else if("80".equals(statusFlg)||"81".equals(statusFlg)){
+				ps.setString(++position, "評価入力中");//status
+            }else if("90".equals(statusFlg)||"91".equals(statusFlg)){
+				ps.setString(++position, "工事完了");//status
+			}else{
+				ps.setString(++position, "");//status
+			}
 			ps.setString(++position, "");//person
 			ps.setString(++position, csvData[6]);//trkDate
 			ps.setString(++position, csvData[7]);//updDate
@@ -1595,8 +1627,8 @@ public class ValdacUtilites {
 			ps.setString(++position,koujiRirekiDataList.tenkenKekka0);
 			ps.setString(++position,koujiRirekiDataList.tenkenBikou);
 			ps.setString(++position,koujiRirekiDataList.KanryoFlg);
-			ps.setString(++position,koujiRirekiDataList.tenkenDate);
-			ps.setString(++position,koujiRirekiDataList.tenkenDate);
+			ps.setString(++position,koujiRirekiDataList.trkDate);
+			ps.setString(++position,koujiRirekiDataList.updDate);
 
 
 			int result = ps.executeUpdate();
@@ -1681,6 +1713,49 @@ public class ValdacUtilites {
 	public static boolean importDataKoujiRelation(Connection conn,
 			List<ValdacUserDataDto> allKoujiRirekiDataList, String tablename) throws SQLException {
 		int count = 1;
+
+		for (ValdacUserDataDto koujiRirekiDataList : allKoujiRirekiDataList) {
+			String sql = "INSERT INTO  " + tablename + " VALUES (";
+			List<String> query = new ArrayList<String>();
+
+			for (int nIndex = 1; nIndex <= ValdacConfig.Length_New_KoujiRelation; nIndex++) { // [備忘]カラム追加時はカウンタ追加
+				query.add("?");
+			}
+			sql = sql + StringUtil.concatWithDelimit(",", query) + ");";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			int position = 0;
+			//ID
+			ps.setInt(++position, count++);
+//			ps.setInt(++position,Integer.parseInt(koujiRirekiDataList.id));
+			//koujiId
+			ps.setString(++position,koujiRirekiDataList.koujiID);
+			ps.setString(++position,koujiRirekiDataList.KikiSysId);
+			ps.setString(++position,koujiRirekiDataList.kikiID);
+
+			int result = ps.executeUpdate();
+			if (result == 0) {
+				return false;
+			}
+			if (ps != null) {
+				ps.close();
+			}
+		}
+		return true;
+	}
+
+	/**
+	 *工事関連表テーブルに CSVデータのインポート
+	 *
+	 * @param conn
+	 *            DBサーバーへの接続情報
+	 * @param csvdata
+	 *            CSVデータ
+	 * @return 実行可否のブール値
+	 * @throws SQLException
+	 */
+	public static boolean importDataKoujiRelationForKenan(Connection conn,
+			List<ValdacUserDataDto> allKoujiRirekiDataList, String tablename) throws SQLException {
+		int count = 60000;
 		String sql = "DELETE FROM  " + tablename + " where id>60000 and id<62000 ;";
 		PreparedStatement ps1 = conn.prepareStatement(sql);
 		boolean result1 = ps1.execute();
@@ -1699,8 +1774,8 @@ public class ValdacUtilites {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			int position = 0;
 			//ID
-//			ps.setInt(++position, count++);
-			ps.setInt(++position,Integer.parseInt(koujiRirekiDataList.id));
+			ps.setInt(++position, count++);
+//			ps.setInt(++position,Integer.parseInt(koujiRirekiDataList.id));
 			//koujiId
 			ps.setString(++position,koujiRirekiDataList.koujiID);
 			ps.setString(++position,koujiRirekiDataList.KikiSysId);
@@ -2170,7 +2245,7 @@ public class ValdacUtilites {
 			String KikiBunrui=rs.getString("k04KikiBunrui");
 			String KikiBunruiSeq=StringUtil.convertFixedLengthData(rs.getString("k04KikiBunruiSeq"),2,"0");
 
-			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+//			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
 
 			// 工事旧ID
 			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
@@ -2182,6 +2257,7 @@ public class ValdacUtilites {
 			//点検結果部分
 
 			userdata.tenkenNaiyo=toBigJp(rs.getString("k04TenkenNaiyo"));
+			userdata.tenkenRank=toBigJp(rs.getString("k04TenkenRank"));
 
 			userDataList.add(userdata);
 		}
@@ -2397,8 +2473,8 @@ public class ValdacUtilites {
 			String KikiBunrui=TempcsvData[2];
 			String KikiBunruiSeq=StringUtil.convertFixedLengthData(TempcsvData[3],2,"0");
 
-//			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
-            userdata.id=Integer.toString(count);
+			userdata.id=StringUtil.concatWithDelimit("",KCode,KjSeq, Kikisys,KikiBunrui,KikiBunruiSeq);
+//            userdata.id=Integer.toString(count);
 			// 工事旧ID
 			userdata.koujiIDOld = StringUtil.concatWithDelimit("", KCode,KjSeq);
 			// 弁旧ID
@@ -2407,7 +2483,9 @@ public class ValdacUtilites {
 			userdata.kikiIDOld = StringUtil.concatWithDelimit("", Kikisys,KikiBunrui,KikiBunruiSeq);
 
 //			//点検結果部分
-
+			userdata.tenkenDate=toBigJp(TempcsvData[4]);
+			userdata.trkDate=toBigJp(TempcsvData[4]);
+			userdata.updDate=toBigJp(TempcsvData[4]);
 			userdata.tenkenRank=toBigJp(TempcsvData[6]);
 			userdata.tenkenKekka0=toBigJp(TempcsvData[13]);
             userdata.tenkenNendo=toBigJp(TempcsvData[5]);

@@ -127,7 +127,7 @@ public class ChangeKenan extends HttpServlet {
 
 				// koujiRelationテーブルに保存 kouji=0
 //				ValdacUtilites.resetDB(conn, ValdacConfig.TABLENAME_KoujiRelation); // DBの初期化
-				ValdacUtilites.importDataKoujiRelation(conn, allKenanDataList,
+				ValdacUtilites.importDataKoujiRelationForKenan(conn, allKenanDataList,
 				ValdacConfig.TABLENAME_KoujiRelation); // koujiRelationテーブル
 
 

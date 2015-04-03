@@ -76,6 +76,9 @@ public class ChangeTenkenRireki extends HttpServlet {
 			// 工事履歴の全データMap
 			List<ValdacUserDataDto> allKoujiRirekiDataList = ValdacUtilites
 							.changeToUserDataList(userDataList);
+			// 点検履歴の全データMap
+			Map<String, ValdacUserDataDto> allKoujiRirekiDataListMap = ValdacUtilites
+					.getallTenkenkikiRankMap(allKoujiRirekiDataList);
 
 			// 工事履歴の 工事IDがないデータMap
 			List<ValdacUserDataDto> allNoMatchKoujiRirekiDataList = new ArrayList<ValdacUserDataDto>();
@@ -104,11 +107,12 @@ public class ChangeTenkenRireki extends HttpServlet {
 			// 4.点検機器のデータを取得
 			List<ValdacUserDataDto> allTenkenkikiRank = ValdacUtilites
 					.getTenkenkikiRank(conn);
-			// 点検機器の全データMap
-			Map<String, ValdacUserDataDto> allTenkenkikiRankMap = ValdacUtilites
-					.getallTenkenkikiRankMap(allTenkenkikiRank);
+//			 点検機器の全データMap
+//			Map<String, ValdacUserDataDto> allTenkenkikiRankMap = ValdacUtilites
+//					.getallTenkenkikiRankMap(allTenkenkikiRank);
 
-			for (ValdacUserDataDto userData : allKoujiRirekiDataList) {
+			//点検機器に点検結果、備考
+			for (ValdacUserDataDto userData : allTenkenkikiRank) {
 
 				// 工事である場合
 				ValdacUserDataDto tmKoujiData = allKoujiDataListMap
@@ -141,13 +145,19 @@ public class ChangeTenkenRireki extends HttpServlet {
 				if((userData.koujiID==null) ||(userData.KikiSysId==null) || (userData.kikiID==null) ){
 					allNoMatchKoujiRirekiDataList.add(userData);
 				}
-				//tenkennaiyoを取得
+				//tenkenkekka,bikouを取得
 				String tenkenkiki=StringUtil.concatWithDelimit("",userData.koujiIDOld,userData.kikiIDOld);
-				ValdacUserDataDto tmTenkenRank=allTenkenkikiRankMap.get(tenkenkiki);
+				ValdacUserDataDto tmTenkenRank=allKoujiRirekiDataListMap.get(tenkenkiki);
 				if (tmTenkenRank != null) {
-					userData.tenkenNaiyo = tmTenkenRank.tenkenNaiyo;
+					userData.tenkenBikou = tmTenkenRank.tenkenBikou;
+					userData.tenkenKekka0 = tmTenkenRank.tenkenKekka0;
+					userData.tenkenNendo = tmTenkenRank.tenkenNendo;
+					userData.KanryoFlg = tmTenkenRank.KanryoFlg;
+					userData.tenkenDate = tmTenkenRank.tenkenDate;
+					userData.trkDate = tmTenkenRank.trkDate;
+					userData.updDate = tmTenkenRank.updDate;
 				} else {
-					System.out.println("該点検機器のID：" + tenkenkiki);
+//					System.out.println("該点検機器のID：" + tenkenkiki);
 				}
 
 			}
@@ -155,16 +165,16 @@ public class ChangeTenkenRireki extends HttpServlet {
 			//点検ランク、点検内容を追加
 			//tenkenRirekiテーブルに保存
 			ValdacUtilites.resetDB(conn, ValdacConfig.TABLENAME_TenkenRireki); // DBの初期化
-			ValdacUtilites.importDataTenkenKiki(conn, allKoujiRirekiDataList,
+			ValdacUtilites.importDataTenkenKiki(conn, allTenkenkikiRank,
 			ValdacConfig.TABLENAME_TenkenRireki); // 点検機器テーブル
 
 			// koujiRelationテーブルに保存
 			ValdacUtilites.resetDB(conn, ValdacConfig.TABLENAME_KoujiRelation); // DBの初期化
-			ValdacUtilites.importDataKoujiRelation(conn, allKoujiRirekiDataList,
+			ValdacUtilites.importDataKoujiRelation(conn, allTenkenkikiRank,
 			ValdacConfig.TABLENAME_KoujiRelation); // koujiRelationテーブル
 
 			if (!ValdacUtilites.downLoadTenkenRireki(request, response,
-					ValdacConfig.OUTPUT_TENKENRIREKI, allKoujiRirekiDataList,
+					ValdacConfig.OUTPUT_TENKENRIREKI, allTenkenkikiRank,
 					ValdacConfig.DELIMITER)) {
 				System.out.println("Error: Failed download CSV file");
 			}
