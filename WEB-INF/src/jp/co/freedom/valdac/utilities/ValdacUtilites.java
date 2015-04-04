@@ -1446,6 +1446,7 @@ public class ValdacUtilites {
 				ps.setString(++position, csvData[nIndex]);
 			}
 			ps.setString(++position, "");//imageId
+			ps.setString(++position, "");//buhinstatus
 			//trkDate,updDate
 			for (int nIndex = 29; nIndex <= 30; nIndex++) {
 				ps.setString(++position, csvData[nIndex]);

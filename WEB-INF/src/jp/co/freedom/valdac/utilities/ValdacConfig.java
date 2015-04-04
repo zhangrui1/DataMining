@@ -76,7 +76,7 @@ public class ValdacConfig {
 
 	public static final int Length_New_Kikisystem=38;
 	public static final int Length_New_Kiki=16;
-	public static final int Length_New_Buhin=21;
+	public static final int Length_New_Buhin=22;
 	public static final int Length_New_KikisystemRelation=10;
 	public static final int Length_New_Image=10;
 	public static final int Length_New_Kouji=15;
